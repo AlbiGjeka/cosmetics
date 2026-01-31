@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/tooltip"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
+import { Link } from "@inertiajs/react";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -374,8 +375,33 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
         className
       )}
       {...props}
-    />
-  )
+    >
+      <SidebarGroup>
+        <SidebarGroupLabel>Products</SidebarGroupLabel>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Products">
+              <Link href="/dashboard/products">
+                Products
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarGroup>
+      <SidebarGroup>
+        <SidebarGroupLabel>Categories</SidebarGroupLabel>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild tooltip="Categories">
+              <Link href="/dashboard/categories">
+                Categories
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarGroup>
+    </div>
+  );
 }
 
 function SidebarGroup({ className, ...props }: React.ComponentProps<"div">) {
