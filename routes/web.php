@@ -43,4 +43,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/dashboard/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 });
 
+Route::get('/product/{product}', [ProductController::class, 'show'])->name('product.show');
+
 require __DIR__ . '/settings.php';

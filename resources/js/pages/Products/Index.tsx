@@ -1,4 +1,5 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Table,
@@ -20,27 +21,89 @@ interface Product {
     affiliate_link: string;
 }
 
-interface ProductsIndexProps {
-    products: Product[];
+interface Category {
+    id: number;
+    name: string;
 }
 
-export default function ProductsIndex({ products }: ProductsIndexProps) {
+interface ProductsIndexProps {
+    products: Product[];
+    categories: Category[];
+    filters: { category_id?: string; search?: string };
+}
+
+export default function ProductsIndex({
+    products,
+    categories,
+    filters,
+}: ProductsIndexProps) {
+    const { data, setData } = useForm({
+        category_id: filters.category_id || '',
+        search: filters.search || '',
+    });
+
     const handleDelete = (id: number) => {
         if (confirm('Are you sure you want to delete this product?')) {
             router.delete(`/dashboard/products/${id}`);
         }
     };
 
+    const handleFilterChange = (
+        key: 'category_id' | 'search',
+        value: string,
+    ) => {
+        setData(key, value);
+        router.get(
+            '/dashboard/products',
+            { ...data, [key]: value },
+            { preserveState: true, replace: true },
+        );
+    };
+
     return (
         <AppLayout>
             <Head title="Products" />
             <div className="p-6">
-                <div className="mb-6 flex items-center justify-between">
+                <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <h1 className="text-2xl font-bold">Products</h1>
-                    <Link href="/dashboard/products/create">
-                        <Button>Create Product</Button>
-                    </Link>
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+                        {/* Category Filter */}
+                        <select
+                            value={data.category_id}
+                            onChange={(e) =>
+                                handleFilterChange(
+                                    'category_id',
+                                    e.target.value,
+                                )
+                            }
+                            className="rounded border border-gray-300 px-3 py-1.5"
+                        >
+                            <option value="">All Categories</option>
+                            {categories.map((cat) => (
+                                <option key={cat.id} value={cat.id}>
+                                    {cat.name}
+                                </option>
+                            ))}
+                        </select>
+
+                        {/* Search Input */}
+                        <input
+                            type="text"
+                            value={data.search}
+                            onChange={(e) =>
+                                handleFilterChange('search', e.target.value)
+                            }
+                            placeholder="Search products..."
+                            className="rounded border border-gray-300 px-3 py-1.5"
+                        />
+
+                        {/* Create Button */}
+                        <Link href="/dashboard/products/create">
+                            <Button>Create Product</Button>
+                        </Link>
+                    </div>
                 </div>
+
                 <div className="rounded-lg bg-white p-6 shadow">
                     <Table>
                         <TableHeader>
@@ -57,7 +120,7 @@ export default function ProductsIndex({ products }: ProductsIndexProps) {
                                 <TableRow key={product.id}>
                                     <TableCell>{product.name}</TableCell>
                                     <TableCell>{product.description}</TableCell>
-                                    <TableCell>{product.price}</TableCell>
+                                    <TableCell>${product.price}</TableCell>
                                     <TableCell>
                                         {product.category.name}
                                     </TableCell>

@@ -11,12 +11,30 @@ use Inertia\Inertia;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category')->get();
+        $query = Product::with('category');
+
+        // Filter by category
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+
+        // Search by name or description
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('description', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $products = $query->get();
+        $categories = Category::all();
 
         return Inertia::render('Products/Index', [
             'products' => $products,
+            'categories' => $categories,
+            'filters' => $request->only(['category_id', 'search']),
         ]);
     }
 
@@ -97,4 +115,12 @@ class ProductController extends Controller
             ->route('products.index')
             ->with('success', 'Product deleted successfully.');
     }
+
+    public function show(Product $product)
+    {
+        return Inertia::render('Products/Show', [
+            'product' => $product
+        ]);
+    }
+
 }

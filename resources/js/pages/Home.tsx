@@ -193,17 +193,19 @@ export default function Welcome({
                                         key={product.id}
                                         className="group rounded-2xl bg-white p-4 shadow-sm transition hover:shadow-lg"
                                     >
-                                        <div className="overflow-hidden rounded-xl">
-                                            <img
-                                                src={
-                                                    product.image_url
-                                                        ? `/storage/${product.image_url}`
-                                                        : '/placeholder.png'
-                                                }
-                                                alt={product.name}
-                                                className="..."
-                                            />
-                                        </div>
+                                        <Link href={`/product/${product.id}`}>
+                                            <div className="overflow-hidden rounded-xl">
+                                                <img
+                                                    src={
+                                                        product.image_url
+                                                            ? `/storage/${product.image_url}`
+                                                            : '/placeholder.png'
+                                                    }
+                                                    alt={product.name}
+                                                    className="..."
+                                                />
+                                            </div>
+                                        </Link>
 
                                         <h4 className="mt-3 text-sm font-medium">
                                             {product.name}
