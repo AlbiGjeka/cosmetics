@@ -6,18 +6,24 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $products = Product::with('category')->get();
+
         return Inertia::render('Products/Index', [
             'products' => $products,
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('Products/Form', [
+            'categories' => Category::all(),
         ]);
     }
 
@@ -28,11 +34,28 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
-            'image_url' => 'nullable|string',
-            'affiliate_link' => 'required|url'
+            'affiliate_link' => 'required|url',
+            'image_url' => 'nullable|image',
         ]);
 
-        return Product::create($data);
+        if ($request->hasFile('image_url')) {
+            $data['image_url'] = $request->file('image_url')
+                ->store('products', 'public');
+        }
+
+        Product::create($data);
+
+        return redirect()
+            ->route('products.index')
+            ->with('success', 'Product created successfully.');
+    }
+
+    public function edit(Product $product)
+    {
+        return Inertia::render('Products/Form', [
+            'product' => $product,
+            'categories' => Category::all(),
+        ]);
     }
 
     public function update(Request $request, Product $product)
@@ -42,34 +65,36 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
-            'image_url' => 'nullable|string',
-            'affiliate_link' => 'required|url'
+            'affiliate_link' => 'required|url',
+            'image_url' => 'nullable|image',
         ]);
 
+        if ($request->hasFile('image_url')) {
+            if ($product->image_url) {
+                Storage::disk('public')->delete($product->image_url);
+            }
+
+            $data['image_url'] = $request->file('image_url')
+                ->store('products', 'public');
+        }
+
         $product->update($data);
-        return $product;
+
+        return redirect()
+            ->route('products.index')
+            ->with('success', 'Product updated successfully.');
     }
 
     public function destroy(Product $product)
     {
+        if ($product->image_url) {
+            Storage::disk('public')->delete($product->image_url);
+        }
+
         $product->delete();
-        return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
+
+        return redirect()
+            ->route('products.index')
+            ->with('success', 'Product deleted successfully.');
     }
-
-    public function create()
-    {
-        $categories = Category::all();
-        return Inertia::render('Products/Form', ['categories' => $categories]);
-    }
-
-    public function edit(Product $product)
-    {
-        $categories = Category::all();
-        return Inertia::render('Products/Form', [
-            'product' => $product,
-            'categories' => $categories
-        ]);
-    }
-
-
 }

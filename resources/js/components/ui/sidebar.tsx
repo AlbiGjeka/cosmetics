@@ -377,7 +377,6 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
       {...props}
     >
       <SidebarGroup>
-        <SidebarGroupLabel>Products</SidebarGroupLabel>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip="Products">
@@ -387,9 +386,6 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-      </SidebarGroup>
-      <SidebarGroup>
-        <SidebarGroupLabel>Categories</SidebarGroupLabel>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip="Categories">

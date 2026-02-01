@@ -9,7 +9,7 @@ use Laravel\Fortify\Features;
 
 Route::get('/', function () {
     $categories = Category::with('products')->get();
-    return Inertia::render('welcome', [
+    return Inertia::render('Home', [
         'canRegister' => Features::enabled(Features::registration()),
         'categories' => $categories,
     ]);
