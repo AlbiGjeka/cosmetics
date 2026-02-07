@@ -1,0 +1,46 @@
+{
+    "header": {
+        "login": "Login",
+        "register": "Register",
+        "dashboard": "Dashboard",
+        "brand_primary": "Glow",
+        "brand_secondary": "Beauty"
+    },
+    "footer": {
+        "brand": "GlowBeauty",
+        "about_text": "Premium skincare & cosmetics curated from trusted brands.",
+        "quick_links": "Quick Links",
+        "categories": "Categories",
+        "contact": "Contact",
+        "newsletter_title": "Subscribe to our newsletter",
+        "newsletter_text": "Get the latest updates on new products and offers.",
+        "email_placeholder": "Your email",
+        "subscribe": "Subscribe",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "home": "Home",
+        "featured": "Featured",
+        "skincare": "Skincare",
+        "makeup": "Makeup",
+        "haircare": "Haircare"
+    },
+    "welcome": {
+        "hero_title": "Discover Your Perfect Glow",
+        "hero_text": "Premium skincare & cosmetics curated from trusted brands.",
+        "shop_now": "Shop Now",
+        "all_products": "All Products",
+        "featured_picks": "🔥 Featured Picks",
+        "buy_now": "Buy Now →"
+    },
+    "product": {
+        "buy_now": "Buy Now →",
+        "add_to_wishlist": "Add to Wishlist",
+        "product_details": "Product Details",
+        "features": [
+            "Cruelty-free & vegan",
+            "Dermatologist-tested",
+            "Suitable for all skin types"
+        ],
+        "reviews": "{count} reviews"
+    }
+}

@@ -4,6 +4,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '../css/app.css';
 import { initializeTheme } from './hooks/use-appearance';
+import { LanguageProvider } from './context/LanguageContext'; // <-- import it
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -19,7 +20,10 @@ createInertiaApp({
 
         root.render(
             <StrictMode>
-                <App {...props} />
+                {/* Wrap in LanguageProvider */}
+                <LanguageProvider>
+                    <App {...props} />
+                </LanguageProvider>
             </StrictMode>,
         );
     },

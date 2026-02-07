@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import PublicLayout from '@/layouts/PublicLayout';
+import { useTranslate } from '@/context/LanguageContext';
 
 interface Product {
     id: number;
@@ -14,6 +15,8 @@ interface Product {
 }
 
 export default function ProductShow({ product }: { product: Product }) {
+    const { t } = useTranslate();
+
     return (
         <PublicLayout>
             <Head title={product.name} />
@@ -85,7 +88,12 @@ export default function ProductShow({ product }: { product: Product }) {
                                         ))}
                                     </div>
                                     <p className="text-sm text-gray-600">
-                                        {product.reviewCount || 0} reviews
+                                        {t('product', 'reviews').replace(
+                                            '{count}',
+                                            (
+                                                product.reviewCount || 0
+                                            ).toString(),
+                                        )}
                                     </p>
                                 </div>
                             </div>
@@ -121,23 +129,28 @@ export default function ProductShow({ product }: { product: Product }) {
                                     rel="noopener noreferrer"
                                     className="rounded-full bg-pink-600 px-6 py-3 text-center text-lg font-medium text-white shadow-sm transition hover:bg-pink-700"
                                 >
-                                    Buy Now →
+                                    {t('product', 'buy_now')}
                                 </a>
                                 <button className="rounded-full border-2 border-pink-600 px-6 py-3 text-center text-lg font-medium text-pink-600 transition hover:bg-pink-50">
-                                    Add to Wishlist
+                                    {t('product', 'add_to_wishlist')}
                                 </button>
                             </div>
 
                             <section className="mt-12">
                                 <h2 className="text-lg font-bold text-gray-900">
-                                    Product Details
+                                    {t('product', 'product_details')}
                                 </h2>
                                 <div className="prose mt-4 max-w-none text-gray-600">
                                     <p>{product.description}</p>
                                     <ul className="mt-4 list-disc pl-5">
-                                        <li>Cruelty-free & vegan</li>
-                                        <li>Dermatologist-tested</li>
-                                        <li>Suitable for all skin types</li>
+                                        {(
+                                            t(
+                                                'product',
+                                                'features',
+                                            ) as unknown as string[]
+                                        ).map((feature, i) => (
+                                            <li key={i}>{feature}</li>
+                                        ))}
                                     </ul>
                                 </div>
                             </section>

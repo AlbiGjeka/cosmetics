@@ -1,0 +1,46 @@
+{
+    "header": {
+        "login": "Kyçu",
+        "register": "Regjistrohu",
+        "dashboard": "Paneli",
+        "brand_primary": "Glow",
+        "brand_secondary": "Beauty"
+    },
+    "footer": {
+        "brand": "GlowBeauty",
+        "about_text": "Kujdesi premium për lëkurën & kozmetikë e zgjedhur nga markat e besueshme.",
+        "quick_links": "Lidhje të shpejta",
+        "categories": "Kategoritë",
+        "contact": "Kontakt",
+        "newsletter_title": "Abonohu në buletinin tonë",
+        "newsletter_text": "Merr përditësime mbi produktet e reja dhe ofertat.",
+        "email_placeholder": "Email-i juaj",
+        "subscribe": "Abonohu",
+        "privacy": "Politika e Privatësisë",
+        "terms": "Kushtet e Shërbimit",
+        "home": "Kreu",
+        "featured": "Të veçuarat",
+        "skincare": "Kujdesi i lëkurës",
+        "makeup": "Makeup",
+        "haircare": "Kujdesi për flokët"
+    },
+    "welcome": {
+        "hero_title": "Zbuloni Shkëlqimin Tuaj të Përkryer",
+        "hero_text": "Kujdesi premium për lëkurën & kozmetikë e zgjedhur nga markat e besueshme.",
+        "shop_now": "Bleni Tani",
+        "all_products": "Të gjitha Produktet",
+        "featured_picks": "🔥 Të Veçuarat",
+        "buy_now": "Bleni →"
+    },
+    "product": {
+        "buy_now": "Bleni →",
+        "add_to_wishlist": "Shto në listën e dëshirave",
+        "product_details": "Detajet e Produktit",
+        "features": [
+            "Pa përkujdesje ndaj kafshëve & vegan",
+            "Testuar nga dermatologët",
+            "I përshtatshëm për të gjitha llojet e lëkurës"
+        ],
+        "reviews": "{count} komente"
+    }
+}
