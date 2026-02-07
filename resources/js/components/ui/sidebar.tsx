@@ -336,8 +336,15 @@ function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
       data-sidebar="header"
       className={cn("flex flex-col gap-2 p-2", className)}
       {...props}
-    />
-  )
+    >
+      <Link
+        href="/"
+        className="flex items-center gap-2 text-lg font-semibold text-sidebar-foreground hover:opacity-80 transition-opacity"
+      >
+        <h1 className="text-xl font-semibold tracking-wide">GlowBeauty</h1>
+      </Link>
+    </div>
+  );
 }
 
 function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
