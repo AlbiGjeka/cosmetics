@@ -10,9 +10,13 @@ class Product extends Model
         'name',
         'description',
         'price',
-        'image_url',
+        'image_urls',
         'affiliate_link',
         'category_id'
+    ];
+
+    protected $casts = [
+        'image_urls' => 'array',
     ];
 
     public function category()

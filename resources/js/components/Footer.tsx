@@ -147,7 +147,7 @@ export default function Footer() {
                                         'footer',
                                         'email_placeholder',
                                     )}
-                                    className="block w-full min-w-0 flex-1 rounded-l-md border-gray-300 focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
+                                    className="block w-full min-w-0 flex-1 pl-3 rounded-l-md border-gray-300 focus:border-pink-500 focus:ring-pink-500 sm:text-sm"
                                 />
                                 <button
                                     type="submit"

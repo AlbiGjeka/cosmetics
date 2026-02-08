@@ -53,12 +53,14 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
             'affiliate_link' => 'required|url',
-            'image_url' => 'nullable|image',
+            'image_urls.*' => 'nullable|image',
         ]);
 
-        if ($request->hasFile('image_url')) {
-            $data['image_url'] = $request->file('image_url')
-                ->store('products', 'public');
+        if ($request->hasFile('image_urls')) {
+            $data['image_urls'] = [];
+            foreach ($request->file('image_urls') as $image) {
+                $data['image_urls'][] = $image->store('products', 'public');
+            }
         }
 
         Product::create($data);
@@ -84,17 +86,38 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
             'affiliate_link' => 'required|url',
-            'image_url' => 'nullable|image',
+            'image_urls' => 'array',
+            'image_urls.*' => 'nullable',
         ]);
 
-        if ($request->hasFile('image_url')) {
-            if ($product->image_url) {
-                Storage::disk('public')->delete($product->image_url);
-            }
+        /** ---------------------------------------------
+         * 1. Images sent as strings = KEEP
+         * --------------------------------------------- */
+        $existingImages = collect($request->input('image_urls', []))
+            ->filter(fn($img) => is_string($img))
+            ->values();
 
-            $data['image_url'] = $request->file('image_url')
-                ->store('products', 'public');
+        /** ---------------------------------------------
+         * 2. Delete removed images
+         * --------------------------------------------- */
+        collect($product->image_urls ?? [])
+            ->diff($existingImages)
+            ->each(fn($img) => Storage::disk('public')->delete($img));
+
+        /** ---------------------------------------------
+         * 3. Store newly uploaded images
+         * --------------------------------------------- */
+        if ($request->hasFile('image_urls')) {
+            foreach ($request->file('image_urls') as $file) {
+                if ($file instanceof \Illuminate\Http\UploadedFile) {
+                    $existingImages->push(
+                        $file->store('products', 'public')
+                    );
+                }
+            }
         }
+
+        $data['image_urls'] = $existingImages->toArray();
 
         $product->update($data);
 
@@ -105,8 +128,10 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        if ($product->image_url) {
-            Storage::disk('public')->delete($product->image_url);
+        if ($product->image_urls) {
+            foreach ($product->image_urls as $image) {
+                Storage::disk('public')->delete($image);
+            }
         }
 
         $product->delete();

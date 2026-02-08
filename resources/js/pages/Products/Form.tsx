@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,8 +12,9 @@ interface Product {
     description: string;
     price: number;
     category_id: number;
-    image_url: File | string | null;
+    image_urls: (File | string)[];
     affiliate_link: string;
+    _method?: 'put';
 }
 
 interface ProductFormProps {
@@ -26,15 +28,41 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
         description: product?.description || '',
         price: product?.price || 0,
         category_id: product?.category_id || 0,
-        image_url: null, // 👈 file will be stored here
+        image_urls: product?.image_urls || [],
         affiliate_link: product?.affiliate_link || '',
     });
+
+    const images = data.image_urls;
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    /* ----------------------------- helpers ----------------------------- */
+
+    const getImageSrc = (img: File | string) =>
+        typeof img === 'string' ? `/storage/${img}` : URL.createObjectURL(img);
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) return;
+
+        setData('image_urls', [...images, ...Array.from(e.target.files)]);
+
+        e.target.value = '';
+    };
+
+    const removeImage = (index: number) => {
+        const updated = images.filter((_, i) => i !== index);
+        setData('image_urls', updated);
+
+        if (currentImageIndex >= updated.length) {
+            setCurrentImageIndex(Math.max(0, updated.length - 1));
+        }
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
         if (product) {
-            put(`/dashboard/products/${product.id}`, {
+            setData('_method', 'put');
+            post(`/dashboard/products/${product.id}`, {
                 forceFormData: true,
             });
         } else {
@@ -43,6 +71,8 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
             });
         }
     };
+
+    /* ----------------------------- render ----------------------------- */
 
     return (
         <AppLayout>
@@ -53,6 +83,7 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
                     <h1 className="text-2xl font-bold">
                         {product ? 'Edit Product' : 'Create Product'}
                     </h1>
+
                     <Link href="/dashboard/products">
                         <Button variant="outline">Back to Products</Button>
                     </Link>
@@ -61,9 +92,8 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
                 <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
                     {/* NAME */}
                     <div>
-                        <Label htmlFor="name">Name</Label>
+                        <Label>Name</Label>
                         <Input
-                            id="name"
                             value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
                         />
@@ -76,9 +106,8 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
 
                     {/* DESCRIPTION */}
                     <div>
-                        <Label htmlFor="description">Description</Label>
+                        <Label>Description</Label>
                         <Textarea
-                            id="description"
                             value={data.description}
                             onChange={(e) =>
                                 setData('description', e.target.value)
@@ -93,9 +122,8 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
 
                     {/* PRICE */}
                     <div>
-                        <Label htmlFor="price">Price</Label>
+                        <Label>Price</Label>
                         <Input
-                            id="price"
                             type="number"
                             value={data.price}
                             onChange={(e) =>
@@ -111,19 +139,18 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
 
                     {/* CATEGORY */}
                     <div>
-                        <Label htmlFor="category_id">Category</Label>
+                        <Label>Category</Label>
                         <select
-                            id="category_id"
                             value={data.category_id}
                             onChange={(e) =>
                                 setData('category_id', Number(e.target.value))
                             }
-                            className="mt-1 block w-full rounded-md border border-input bg-background px-3 py-2"
+                            className="mt-1 w-full rounded-md border px-3 py-2"
                         >
-                            <option value="">Select a category</option>
-                            {categories.map((category) => (
-                                <option key={category.id} value={category.id}>
-                                    {category.name}
+                            <option value="">Select category</option>
+                            {categories.map((cat) => (
+                                <option key={cat.id} value={cat.id}>
+                                    {cat.name}
                                 </option>
                             ))}
                         </select>
@@ -134,41 +161,92 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
                         )}
                     </div>
 
-                    {/* IMAGE UPLOAD */}
+                    {/* IMAGE MANAGER */}
                     <div>
-                        <Label htmlFor="image_url">Product Image</Label>
-                        <Input
-                            id="image_url"
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) =>
-                                setData(
-                                    'image_url',
-                                    e.target.files?.[0] || null,
-                                )
-                            }
-                        />
-                        {errors.image_url && (
-                            <p className="text-sm text-red-500">
-                                {errors.image_url}
-                            </p>
+                        <Label>Product Images</Label>
+
+                        {images.length > 0 && (
+                            <div className="mt-3">
+                                <div className="relative h-64 w-full overflow-hidden rounded-lg border">
+                                    <img
+                                        src={getImageSrc(
+                                            images[currentImageIndex],
+                                        )}
+                                        className="h-full w-full object-cover"
+                                    />
+
+                                    {images.length > 1 && (
+                                        <>
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setCurrentImageIndex((i) =>
+                                                        i === 0
+                                                            ? images.length - 1
+                                                            : i - 1,
+                                                    )
+                                                }
+                                                className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full bg-white p-2 shadow"
+                                            >
+                                                ‹
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setCurrentImageIndex((i) =>
+                                                        i === images.length - 1
+                                                            ? 0
+                                                            : i + 1,
+                                                    )
+                                                }
+                                                className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full bg-white p-2 shadow"
+                                            >
+                                                ›
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
+
+                                <div className="mt-3 flex items-center justify-between">
+                                    <p className="text-sm text-gray-600">
+                                        Image {currentImageIndex + 1} of{' '}
+                                        {images.length}
+                                    </p>
+
+                                    <Button
+                                        type="button"
+                                        variant="destructive"
+                                        size="sm"
+                                        onClick={() =>
+                                            removeImage(currentImageIndex)
+                                        }
+                                    >
+                                        Remove Image
+                                    </Button>
+                                </div>
+                            </div>
                         )}
 
-                        {/* Existing image preview (edit mode) */}
-                        {product?.image_url && (
-                            <img
-                                src={`/storage/${product.image_url}`}
-                                alt="Current product"
-                                className="mt-3 h-32 rounded-md object-cover"
-                            />
+                        <Input
+                            className="mt-4"
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            onChange={handleImageChange}
+                        />
+
+                        {errors.image_urls && (
+                            <p className="text-sm text-red-500">
+                                {errors.image_urls}
+                            </p>
                         )}
                     </div>
 
                     {/* AFFILIATE LINK */}
                     <div>
-                        <Label htmlFor="affiliate_link">Affiliate Link</Label>
+                        <Label>Affiliate Link</Label>
                         <Input
-                            id="affiliate_link"
                             value={data.affiliate_link}
                             onChange={(e) =>
                                 setData('affiliate_link', e.target.value)

@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { useState } from 'react';
-import { dashboard, login, register } from '@/routes';
+import { dashboardProducts, login, register } from '@/routes';
 import LanguageSelect from './LanguageSelect';
 import { useTranslate } from '@/context/LanguageContext';
 
@@ -42,7 +42,7 @@ export default function Header({ auth }: HeaderProps) {
                         {/* Desktop navigation */}
                         {auth.user ? (
                             <Link
-                                href={dashboard()}
+                                href={dashboardProducts()}
                                 className="rounded-full bg-pink-600 px-5 py-2 text-white transition hover:bg-pink-700"
                             >
                                 {t('header', 'dashboard')}
@@ -79,14 +79,13 @@ export default function Header({ auth }: HeaderProps) {
             {isMobileMenuOpen && (
                 <div className="bg-white shadow-md md:hidden">
                     <div className="flex flex-col items-start space-y-2 px-4 py-3">
-
                         {/* Language selector */}
                         <LanguageSelect />
 
                         {/* Auth links */}
                         {auth.user ? (
                             <Link
-                                href={dashboard()}
+                                href={dashboardProducts()}
                                 className="inline-flex justify-center rounded-full bg-pink-600 px-5 py-2 text-white transition hover:bg-pink-700"
                             >
                                 {t('header', 'dashboard')}

@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('name');
             $table->text('description')->nullable();
             $table->decimal('price', 8, 2);
-            $table->string('image_url')->nullable();
+            $table->json('image_urls')->nullable(); 
             $table->string('affiliate_link');
             $table->foreignId('category_id')->constrained('categories');
             $table->timestamps();

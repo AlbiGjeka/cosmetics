@@ -341,7 +341,7 @@ function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
         href="/"
         className="flex items-center gap-2 text-lg font-semibold text-sidebar-foreground hover:opacity-80 transition-opacity"
       >
-        <h1 className="text-xl font-semibold tracking-wide">GlowBeauty</h1>
+        <h1 className="text-2xl font-bold text-pink-600">Glow<span className="text-gray-900">Beauty</span></h1>
       </Link>
     </div>
   );
@@ -386,18 +386,18 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
       <SidebarGroup>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Products">
-              <Link href="/dashboard/products">
-                Products
+            <SidebarMenuButton asChild tooltip="Categories">
+              <Link href="/dashboard/categories">
+                Categories
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Categories">
-              <Link href="/dashboard/categories">
-                Categories
+            <SidebarMenuButton asChild tooltip="Products">
+              <Link href="/dashboard/products">
+                Products
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

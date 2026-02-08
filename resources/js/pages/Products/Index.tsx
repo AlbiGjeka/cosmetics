@@ -76,7 +76,7 @@ export default function ProductsIndex({
                                     e.target.value,
                                 )
                             }
-                            className="rounded border border-gray-300 px-3 py-1.5"
+                            className="rounded border border-gray-300 py-1.5"
                         >
                             <option value="">All Categories</option>
                             {categories.map((cat) => (
@@ -94,7 +94,7 @@ export default function ProductsIndex({
                                 handleFilterChange('search', e.target.value)
                             }
                             placeholder="Search products..."
-                            className="rounded border border-gray-300 px-3 py-1.5"
+                            className="rounded border border-gray-300 pl-3 py-1.5"
                         />
 
                         {/* Create Button */}

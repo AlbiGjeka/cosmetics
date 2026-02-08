@@ -1,13 +1,14 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import PublicLayout from '@/layouts/PublicLayout';
 import { useTranslate } from '@/context/LanguageContext';
+import { useEffect, useState } from 'react';
 
 interface Product {
     id: number;
     name: string;
     description: string;
     price: number;
-    image_url: string;
+    image_urls: string[];
     affiliate_link: string;
     discount?: number;
     rating?: number;
@@ -17,46 +18,100 @@ interface Product {
 export default function ProductShow({ product }: { product: Product }) {
     const { t } = useTranslate();
 
+    const images =
+        product.image_urls && product.image_urls.length > 0
+            ? product.image_urls
+            : ['/placeholder.png'];
+
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    /* Auto-rotate carousel */
+    useEffect(() => {
+        if (images.length <= 1) return;
+
+        const interval = setInterval(() => {
+            setCurrentIndex((prev) =>
+                prev === images.length - 1 ? 0 : prev + 1,
+            );
+        }, 15000);
+
+        return () => clearInterval(interval);
+    }, [images.length]);
+
     return (
         <PublicLayout>
             <Head title={product.name} />
+
             <div className="bg-gradient-to-b from-pink-50 to-white">
                 <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
                     <div className="lg:grid lg:grid-cols-2 lg:gap-x-12">
                         {/* IMAGE GALLERY */}
                         <div className="flex flex-col-reverse gap-4">
+                            {/* Thumbnails */}
                             <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block">
                                 <div className="grid grid-cols-4 gap-4">
-                                    {[...Array(4)].map((_, i) => (
-                                        <div
+                                    {images.slice(0, 4).map((url, i) => (
+                                        <button
                                             key={i}
-                                            className="group relative aspect-square overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md"
+                                            onClick={() => setCurrentIndex(i)}
+                                            className={`relative aspect-square overflow-hidden rounded-xl bg-white shadow-sm transition ${
+                                                currentIndex === i
+                                                    ? 'ring-2 ring-pink-500'
+                                                    : 'hover:shadow-md'
+                                            }`}
                                         >
                                             <img
-                                                src={
-                                                    product.image_url
-                                                        ? `/storage/${product.image_url}`
-                                                        : '/placeholder.png'
-                                                }
-                                                alt={product.name}
+                                                src={`/storage/${url}`}
+                                                alt={`${product.name} ${i + 1}`}
                                                 className="h-full w-full object-cover"
                                                 loading="lazy"
                                             />
-                                        </div>
+                                        </button>
                                     ))}
                                 </div>
                             </div>
-                            <div className="aspect-square w-full overflow-hidden rounded-2xl bg-pink-50 shadow-lg">
+
+                            {/* Main carousel image */}
+                            <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-pink-50 shadow-lg">
                                 <img
-                                    src={
-                                        product.image_url
-                                            ? `/storage/${product.image_url}`
-                                            : '/placeholder.png'
-                                    }
-                                    alt={product.name}
-                                    className="h-full w-full object-cover"
+                                    src={`/storage/${images[currentIndex]}`}
+                                    alt={`${product.name} ${currentIndex + 1}`}
+                                    className="h-full w-full object-cover transition-opacity duration-500"
                                     loading="lazy"
                                 />
+
+                                {images.length > 1 && (
+                                    <>
+                                        {/* Left arrow */}
+                                        <button
+                                            onClick={() =>
+                                                setCurrentIndex(
+                                                    currentIndex === 0
+                                                        ? images.length - 1
+                                                        : currentIndex - 1,
+                                                )
+                                            }
+                                            className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full bg-white/80 p-2 text-xl shadow hover:bg-white"
+                                        >
+                                            ‹
+                                        </button>
+
+                                        {/* Right arrow */}
+                                        <button
+                                            onClick={() =>
+                                                setCurrentIndex(
+                                                    currentIndex ===
+                                                        images.length - 1
+                                                        ? 0
+                                                        : currentIndex + 1,
+                                                )
+                                            }
+                                            className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full bg-white/80 p-2 text-xl shadow hover:bg-white"
+                                        >
+                                            ›
+                                        </button>
+                                    </>
+                                )}
                             </div>
                         </div>
 
@@ -66,6 +121,7 @@ export default function ProductShow({ product }: { product: Product }) {
                                 <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
                                     {product.name}
                                 </h1>
+
                                 <div className="flex items-center gap-2">
                                     <div className="flex items-center">
                                         {[...Array(5)].map((_, i) => (
@@ -79,25 +135,24 @@ export default function ProductShow({ product }: { product: Product }) {
                                                         ? 'text-yellow-400'
                                                         : 'text-gray-300'
                                                 }`}
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 20 20"
                                                 fill="currentColor"
+                                                viewBox="0 0 20 20"
                                             >
                                                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                             </svg>
                                         ))}
                                     </div>
+
                                     <p className="text-sm text-gray-600">
                                         {t('product', 'reviews').replace(
                                             '{count}',
-                                            (
-                                                product.reviewCount || 0
-                                            ).toString(),
+                                            String(product.reviewCount || 0),
                                         )}
                                     </p>
                                 </div>
                             </div>
 
+                            {/* Price */}
                             <div className="mt-6">
                                 <div className="flex items-end gap-3">
                                     <p className="text-3xl font-bold text-gray-900">
@@ -109,6 +164,7 @@ export default function ProductShow({ product }: { product: Product }) {
                                                 100
                                         ).toFixed(2)}
                                     </p>
+
                                     {product.discount && (
                                         <>
                                             <p className="text-lg text-gray-400 line-through">
@@ -122,6 +178,7 @@ export default function ProductShow({ product }: { product: Product }) {
                                 </div>
                             </div>
 
+                            {/* Actions */}
                             <div className="mt-8 flex flex-col gap-4">
                                 <a
                                     href={product.affiliate_link}
@@ -131,17 +188,21 @@ export default function ProductShow({ product }: { product: Product }) {
                                 >
                                     {t('product', 'buy_now')}
                                 </a>
-                                <button className="rounded-full border-2 border-pink-600 px-6 py-3 text-center text-lg font-medium text-pink-600 transition hover:bg-pink-50">
+
+                                <button className="rounded-full border-2 border-pink-600 px-6 py-3 text-lg font-medium text-pink-600 transition hover:bg-pink-50">
                                     {t('product', 'add_to_wishlist')}
                                 </button>
                             </div>
 
+                            {/* Details */}
                             <section className="mt-12">
                                 <h2 className="text-lg font-bold text-gray-900">
                                     {t('product', 'product_details')}
                                 </h2>
+
                                 <div className="prose mt-4 max-w-none text-gray-600">
                                     <p>{product.description}</p>
+
                                     <ul className="mt-4 list-disc pl-5">
                                         {(
                                             t(

@@ -32,6 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/dashboard/products', [ProductController::class, 'store'])->name('products.store');
     Route::get('/dashboard/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
     Route::put('/dashboard/products/{product}', [ProductController::class, 'update'])->name('products.update');
+    Route::post('/dashboard/products/{product}', [ProductController::class, 'update']);
     Route::delete('/dashboard/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 });
 

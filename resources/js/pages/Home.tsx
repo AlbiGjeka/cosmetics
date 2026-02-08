@@ -11,7 +11,7 @@ interface Product {
     name: string;
     description: string;
     price: number;
-    image_url: string;
+    image_urls: string[];
     affiliate_link: string;
 }
 
@@ -122,8 +122,10 @@ export default function Welcome({
                                         <div className="h-32 w-full overflow-hidden rounded-xl bg-pink-50">
                                             <img
                                                 src={
-                                                    product.image_url
-                                                        ? `/storage/${product.image_url}`
+                                                    product.image_urls &&
+                                                    product.image_urls.length >
+                                                        0
+                                                        ? `/storage/${product.image_urls[0]}`
                                                         : '/placeholder.png'
                                                 }
                                                 alt={product.name}
@@ -177,8 +179,11 @@ export default function Welcome({
                                                     <div className="aspect-square overflow-hidden rounded-xl bg-pink-50">
                                                         <img
                                                             src={
-                                                                product.image_url
-                                                                    ? `/storage/${product.image_url}`
+                                                                product.image_urls &&
+                                                                product
+                                                                    .image_urls
+                                                                    .length > 0
+                                                                    ? `/storage/${product.image_urls[0]}`
                                                                     : '/placeholder.png'
                                                             }
                                                             alt={product.name}
