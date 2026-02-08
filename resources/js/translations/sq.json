@@ -30,7 +30,8 @@
         "shop_now": "Blini Tani",
         "all_products": "Të gjitha Produktet",
         "featured_picks": "🔥 Të Veçuarat",
-        "buy_now": "Blini →"
+        "buy_now": "Blini →",
+        "compare_products": "Krahaso Produktet"
     },
     "product": {
         "buy_now": "Blini →",
@@ -91,5 +92,10 @@
         "confirm_delete": "Jeni të sigurt që dëshironi ta fshini këtë produkt?",
         "categories": "Kategoritë",
         "products": "Produktet"
+    },
+    "compare": {
+        "title": "Krahaso Produkte",
+        "select_product": "Zgjidh një produkt",
+        "close": "Mbyll"
     }
 }

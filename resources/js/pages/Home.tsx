@@ -5,6 +5,7 @@ import type { SharedData } from '@/types';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useTranslate } from '@/context/LanguageContext';
+import CompareProductsModal from '@/components/CompareProductsModal';
 
 interface Product {
     id: number;
@@ -33,6 +34,10 @@ export default function Welcome({
     const scrollRef = useRef<HTMLDivElement>(null);
     const featuredProducts = categories.flatMap((c) => c.products).slice(0, 6);
     const { t } = useTranslate();
+    const [compareOpen, setCompareOpen] = useState(false);
+
+    // All products (used by compare modal)
+    const allProducts = categories.flatMap((c) => c.products);
 
     return (
         <>
@@ -60,6 +65,13 @@ export default function Welcome({
                                     >
                                         {t('welcome', 'shop_now')}
                                     </Link>
+
+                                    <button
+                                        onClick={() => setCompareOpen(true)}
+                                        className="rounded-full cursor-pointer border border-pink-600 px-6 py-2.5 text-pink-600 transition hover:bg-pink-50"
+                                    >
+                                        {t('welcome', 'compare_products')}
+                                    </button>
                                 </div>
                             </div>
                             <div className="mt-8 lg:mt-0">
@@ -215,6 +227,11 @@ export default function Welcome({
                             ))}
                     </section>
                 </div>
+                <CompareProductsModal
+                    open={compareOpen}
+                    onClose={() => setCompareOpen(false)}
+                    products={allProducts}
+                />
 
                 {/* Footer */}
                 <Footer />
