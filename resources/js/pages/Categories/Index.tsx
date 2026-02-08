@@ -10,6 +10,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
+import { useTranslate } from '@/context/LanguageContext';
 
 interface Category {
     id: number;
@@ -21,6 +22,8 @@ interface CategoriesIndexProps {
 }
 
 export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
+    const { t } = useTranslate();
+
     const { data, setData, post, errors, reset } = useForm<{ name: string }>({
         name: '',
     });
@@ -33,43 +36,54 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
     };
 
     const handleDelete = (id: number) => {
-        if (confirm('Are you sure you want to delete this category?')) {
+        if (confirm(t('categories', 'confirm_delete'))) {
             router.delete(`/dashboard/categories/${id}`);
         }
     };
 
     return (
         <AppLayout>
-            <Head title="Categories" />
+            <Head title={t('categories', 'title')} />
+
             <div className="p-6">
                 <div className="mb-6 flex items-center justify-between">
-                    <h1 className="text-2xl font-bold">Categories</h1>
+                    <h1 className="text-2xl font-bold">
+                        {t('categories', 'title')}
+                    </h1>
                 </div>
+
+                {/* Create Category */}
                 <div className="mb-6 rounded-lg bg-white p-6 shadow">
                     <form onSubmit={handleSubmit} className="flex gap-2">
                         <Input
                             type="text"
                             value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
-                            placeholder="Category name"
+                            placeholder={t('categories', 'category_name')}
                             className="flex-1"
                         />
-                        <Button type="submit">Add Category</Button>
+                        <Button type="submit">{t('categories', 'add')}</Button>
                     </form>
+
                     {errors.name && (
                         <p className="mt-2 text-sm text-red-500">
                             {errors.name}
                         </p>
                     )}
                 </div>
+
+                {/* Categories Table */}
                 <div className="rounded-lg bg-white p-6 shadow">
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Name</TableHead>
-                                <TableHead>Actions</TableHead>
+                                <TableHead>{t('categories', 'name')}</TableHead>
+                                <TableHead>
+                                    {t('categories', 'actions')}
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
+
                         <TableBody>
                             {categories.map((category) => (
                                 <TableRow key={category.id}>
@@ -79,9 +93,10 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                                             href={`/dashboard/categories/${category.id}/edit`}
                                         >
                                             <Button variant="outline" size="sm">
-                                                Edit
+                                                {t('categories', 'edit')}
                                             </Button>
                                         </Link>
+
                                         <Button
                                             variant="destructive"
                                             size="sm"
@@ -89,7 +104,7 @@ export default function CategoriesIndex({ categories }: CategoriesIndexProps) {
                                                 handleDelete(category.id)
                                             }
                                         >
-                                            Delete
+                                            {t('categories', 'delete')}
                                         </Button>
                                     </TableCell>
                                 </TableRow>

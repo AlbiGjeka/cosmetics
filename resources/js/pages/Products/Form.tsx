@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/Textarea';
 import AppLayout from '@/layouts/app-layout';
+import { useTranslate } from '@/context/LanguageContext';
 
 interface Product {
     id?: number;
@@ -23,7 +24,9 @@ interface ProductFormProps {
 }
 
 export default function ProductForm({ product, categories }: ProductFormProps) {
-    const { data, setData, post, put, processing, errors } = useForm<Product>({
+    const { t } = useTranslate();
+
+    const { data, setData, post, processing, errors } = useForm<Product>({
         name: product?.name || '',
         description: product?.description || '',
         price: product?.price || 0,
@@ -42,16 +45,13 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) return;
-
         setData('image_urls', [...images, ...Array.from(e.target.files)]);
-
         e.target.value = '';
     };
 
     const removeImage = (index: number) => {
         const updated = images.filter((_, i) => i !== index);
         setData('image_urls', updated);
-
         if (currentImageIndex >= updated.length) {
             setCurrentImageIndex(Math.max(0, updated.length - 1));
         }
@@ -62,13 +62,9 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
 
         if (product) {
             setData('_method', 'put');
-            post(`/dashboard/products/${product.id}`, {
-                forceFormData: true,
-            });
+            post(`/dashboard/products/${product.id}`, { forceFormData: true });
         } else {
-            post('/dashboard/products', {
-                forceFormData: true,
-            });
+            post('/dashboard/products', { forceFormData: true });
         }
     };
 
@@ -76,23 +72,33 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
 
     return (
         <AppLayout>
-            <Head title={product ? 'Edit Product' : 'Create Product'} />
+            <Head
+                title={
+                    product
+                        ? t('product_form', 'edit_title')
+                        : t('product_form', 'create_title')
+                }
+            />
 
             <div className="p-6">
                 <div className="mb-6 flex items-center justify-between">
                     <h1 className="text-2xl font-bold">
-                        {product ? 'Edit Product' : 'Create Product'}
+                        {product
+                            ? t('product_form', 'edit_title')
+                            : t('product_form', 'create_title')}
                     </h1>
 
                     <Link href="/dashboard/products">
-                        <Button variant="outline">Back to Products</Button>
+                        <Button variant="outline">
+                            {t('product_form', 'back')}
+                        </Button>
                     </Link>
                 </div>
 
                 <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
                     {/* NAME */}
                     <div>
-                        <Label>Name</Label>
+                        <Label>{t('product_form', 'name')}</Label>
                         <Input
                             value={data.name}
                             onChange={(e) => setData('name', e.target.value)}
@@ -106,7 +112,7 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
 
                     {/* DESCRIPTION */}
                     <div>
-                        <Label>Description</Label>
+                        <Label>{t('product_form', 'description')}</Label>
                         <Textarea
                             value={data.description}
                             onChange={(e) =>
@@ -122,7 +128,7 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
 
                     {/* PRICE */}
                     <div>
-                        <Label>Price</Label>
+                        <Label>{t('product_form', 'price')}</Label>
                         <Input
                             type="number"
                             value={data.price}
@@ -139,7 +145,7 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
 
                     {/* CATEGORY */}
                     <div>
-                        <Label>Category</Label>
+                        <Label>{t('product_form', 'category')}</Label>
                         <select
                             value={data.category_id}
                             onChange={(e) =>
@@ -147,7 +153,9 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
                             }
                             className="mt-1 w-full rounded-md border px-3 py-2"
                         >
-                            <option value="">Select category</option>
+                            <option value="">
+                                {t('product_form', 'select_category')}
+                            </option>
                             {categories.map((cat) => (
                                 <option key={cat.id} value={cat.id}>
                                     {cat.name}
@@ -163,11 +171,11 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
 
                     {/* IMAGE MANAGER */}
                     <div>
-                        <Label>Product Images</Label>
+                        <Label>{t('product_form', 'images')}</Label>
 
                         {images.length > 0 && (
                             <div className="mt-3">
-                                <div className="relative h-64 w-full overflow-hidden rounded-lg border">
+                                <div className="relative h-64 overflow-hidden rounded-lg border">
                                     <img
                                         src={getImageSrc(
                                             images[currentImageIndex],
@@ -208,9 +216,11 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
                                     )}
                                 </div>
 
-                                <div className="mt-3 flex items-center justify-between">
+                                <div className="mt-3 flex justify-between">
                                     <p className="text-sm text-gray-600">
-                                        Image {currentImageIndex + 1} of{' '}
+                                        {t('product_form', 'image')}{' '}
+                                        {currentImageIndex + 1}{' '}
+                                        {t('product_form', 'of')}{' '}
                                         {images.length}
                                     </p>
 
@@ -222,7 +232,7 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
                                             removeImage(currentImageIndex)
                                         }
                                     >
-                                        Remove Image
+                                        {t('product_form', 'remove_image')}
                                     </Button>
                                 </div>
                             </div>
@@ -235,32 +245,23 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
                             multiple
                             onChange={handleImageChange}
                         />
-
-                        {errors.image_urls && (
-                            <p className="text-sm text-red-500">
-                                {errors.image_urls}
-                            </p>
-                        )}
                     </div>
 
                     {/* AFFILIATE LINK */}
                     <div>
-                        <Label>Affiliate Link</Label>
+                        <Label>{t('product_form', 'affiliate_link')}</Label>
                         <Input
                             value={data.affiliate_link}
                             onChange={(e) =>
                                 setData('affiliate_link', e.target.value)
                             }
                         />
-                        {errors.affiliate_link && (
-                            <p className="text-sm text-red-500">
-                                {errors.affiliate_link}
-                            </p>
-                        )}
                     </div>
 
                     <Button type="submit" disabled={processing}>
-                        {product ? 'Update Product' : 'Create Product'}
+                        {product
+                            ? t('product_form', 'update')
+                            : t('product_form', 'create')}
                     </Button>
                 </form>
             </div>

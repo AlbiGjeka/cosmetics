@@ -2,6 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AppLayout from '@/layouts/app-layout';
+import { useTranslate } from '@/context/LanguageContext';
 
 interface Category {
     id: number;
@@ -13,6 +14,8 @@ interface CategoryEditProps {
 }
 
 export default function CategoryEdit({ category }: CategoryEditProps) {
+    const { t } = useTranslate();
+
     const { data, setData, put, errors } = useForm<{ name: string }>({
         name: category.name,
     });
@@ -24,14 +27,21 @@ export default function CategoryEdit({ category }: CategoryEditProps) {
 
     return (
         <AppLayout>
-            <Head title="Edit Category" />
+            <Head title={t('category_edit', 'title')} />
+
             <div className="p-6">
                 <div className="mb-6 flex items-center justify-between">
-                    <h1 className="text-2xl font-bold">Edit Category</h1>
+                    <h1 className="text-2xl font-bold">
+                        {t('category_edit', 'title')}
+                    </h1>
+
                     <Link href="/dashboard/categories">
-                        <Button variant="outline">Back to Categories</Button>
+                        <Button variant="outline">
+                            {t('category_edit', 'back')}
+                        </Button>
                     </Link>
                 </div>
+
                 <div className="max-w-md rounded-lg bg-white p-6 shadow">
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
@@ -41,16 +51,23 @@ export default function CategoryEdit({ category }: CategoryEditProps) {
                                 onChange={(e) =>
                                     setData('name', e.target.value)
                                 }
-                                placeholder="Category name"
+                                placeholder={t(
+                                    'category_edit',
+                                    'category_name',
+                                )}
                                 className="w-full"
                             />
+
                             {errors.name && (
                                 <p className="mt-1 text-sm text-red-500">
                                     {errors.name}
                                 </p>
                             )}
                         </div>
-                        <Button type="submit">Update Category</Button>
+
+                        <Button type="submit">
+                            {t('category_edit', 'update')}
+                        </Button>
                     </form>
                 </div>
             </div>

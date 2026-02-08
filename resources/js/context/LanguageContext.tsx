@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import {
+    createContext,
+    useContext,
+    useState,
+    useEffect,
+    ReactNode,
+} from 'react';
 import en from '@/translations/en.json';
 import sq from '@/translations/sq.json';
 
@@ -15,11 +21,21 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType>({
     lang: 'en',
     setLang: () => {},
-    t: (group, key) => key,
+    t: (_group, key) => key,
 });
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-    const [lang, setLang] = useState<Language>('en');
+    // ⬇️ Load language once (safe for browser)
+    const [lang, setLangState] = useState<Language>(() => {
+        if (typeof window === 'undefined') return 'en';
+        return (localStorage.getItem('lang') as Language) || 'en';
+    });
+
+    // ⬇️ Persist language on change
+    const setLang = (language: Language) => {
+        setLangState(language);
+        localStorage.setItem('lang', language);
+    };
 
     const t = (group: string, key: string) =>
         TRANSLATIONS[lang]?.[group]?.[key] ?? key;

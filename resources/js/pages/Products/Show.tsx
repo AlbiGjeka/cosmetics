@@ -91,7 +91,7 @@ export default function ProductShow({ product }: { product: Product }) {
                                                         : currentIndex - 1,
                                                 )
                                             }
-                                            className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full bg-white/80 p-2 text-xl shadow hover:bg-white"
+                                            className="absolute cursor-pointer top-1/2 left-3 -translate-y-1/2 rounded-full bg-white/80 p-2 text-xl shadow hover:bg-white"
                                         >
                                             ‹
                                         </button>
@@ -106,7 +106,7 @@ export default function ProductShow({ product }: { product: Product }) {
                                                         : currentIndex + 1,
                                                 )
                                             }
-                                            className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full bg-white/80 p-2 text-xl shadow hover:bg-white"
+                                            className="absolute cursor-pointer top-1/2 right-3 -translate-y-1/2 rounded-full bg-white/80 p-2 text-xl shadow hover:bg-white"
                                         >
                                             ›
                                         </button>

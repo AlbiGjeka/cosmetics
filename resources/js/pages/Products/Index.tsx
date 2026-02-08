@@ -1,5 +1,4 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Table,
@@ -10,6 +9,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
+import { useTranslate } from '@/context/LanguageContext';
 
 interface Product {
     id: number;
@@ -37,13 +37,15 @@ export default function ProductsIndex({
     categories,
     filters,
 }: ProductsIndexProps) {
+    const { t } = useTranslate();
+
     const { data, setData } = useForm({
         category_id: filters.category_id || '',
         search: filters.search || '',
     });
 
     const handleDelete = (id: number) => {
-        if (confirm('Are you sure you want to delete this product?')) {
+        if (confirm(t('products', 'confirm_delete'))) {
             router.delete(`/dashboard/products/${id}`);
         }
     };
@@ -62,10 +64,14 @@ export default function ProductsIndex({
 
     return (
         <AppLayout>
-            <Head title="Products" />
+            <Head title={t('products', 'title')} />
+
             <div className="p-6">
                 <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <h1 className="text-2xl font-bold">Products</h1>
+                    <h1 className="text-2xl font-bold">
+                        {t('products', 'title')}
+                    </h1>
+
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
                         {/* Category Filter */}
                         <select
@@ -78,7 +84,9 @@ export default function ProductsIndex({
                             }
                             className="rounded border border-gray-300 py-1.5"
                         >
-                            <option value="">All Categories</option>
+                            <option value="">
+                                {t('products', 'all_categories')}
+                            </option>
                             {categories.map((cat) => (
                                 <option key={cat.id} value={cat.id}>
                                     {cat.name}
@@ -86,20 +94,20 @@ export default function ProductsIndex({
                             ))}
                         </select>
 
-                        {/* Search Input */}
+                        {/* Search */}
                         <input
                             type="text"
                             value={data.search}
                             onChange={(e) =>
                                 handleFilterChange('search', e.target.value)
                             }
-                            placeholder="Search products..."
-                            className="rounded border border-gray-300 pl-3 py-1.5"
+                            placeholder={t('products', 'search')}
+                            className="rounded border border-gray-300 py-1.5 pl-3"
                         />
 
-                        {/* Create Button */}
+                        {/* Create */}
                         <Link href="/dashboard/products/create">
-                            <Button>Create Product</Button>
+                            <Button>{t('products', 'create')}</Button>
                         </Link>
                     </div>
                 </div>
@@ -108,13 +116,20 @@ export default function ProductsIndex({
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Name</TableHead>
-                                <TableHead>Description</TableHead>
-                                <TableHead>Price</TableHead>
-                                <TableHead>Category</TableHead>
-                                <TableHead>Actions</TableHead>
+                                <TableHead>{t('products', 'name')}</TableHead>
+                                <TableHead>
+                                    {t('products', 'description')}
+                                </TableHead>
+                                <TableHead>{t('products', 'price')}</TableHead>
+                                <TableHead>
+                                    {t('products', 'category')}
+                                </TableHead>
+                                <TableHead>
+                                    {t('products', 'actions')}
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
+
                         <TableBody>
                             {products.map((product) => (
                                 <TableRow key={product.id}>
@@ -129,16 +144,17 @@ export default function ProductsIndex({
                                             href={`/dashboard/products/${product.id}/edit`}
                                         >
                                             <Button variant="outline">
-                                                Edit
+                                                {t('products', 'edit')}
                                             </Button>
                                         </Link>
+
                                         <Button
                                             variant="destructive"
                                             onClick={() =>
                                                 handleDelete(product.id)
                                             }
                                         >
-                                            Delete
+                                            {t('products', 'delete')}
                                         </Button>
                                     </TableCell>
                                 </TableRow>

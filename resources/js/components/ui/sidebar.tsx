@@ -24,6 +24,7 @@ import {
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 import { Link } from "@inertiajs/react";
+import { useTranslate } from '@/context/LanguageContext';
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -373,6 +374,7 @@ function SidebarSeparator({
 }
 
 function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
+    const { t } = useTranslate();
   return (
     <div
       data-slot="sidebar-content"
@@ -386,18 +388,18 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
       <SidebarGroup>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Categories">
+            <SidebarMenuButton asChild tooltip={t('products', 'categories')}>
               <Link href="/dashboard/categories">
-                Categories
+                {t('products', 'categories')}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Products">
+            <SidebarMenuButton asChild tooltip={t('products', 'products')}>
               <Link href="/dashboard/products">
-                Products
+                {t('products', 'products')}
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

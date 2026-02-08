@@ -42,5 +42,54 @@
             "Suitable for all skin types"
         ],
         "reviews": "{count} reviews"
+    },
+    "product_form": {
+        "create_title": "Create Product",
+        "edit_title": "Edit Product",
+        "back": "Back to Products",
+        "name": "Name",
+        "description": "Description",
+        "price": "Price",
+        "category": "Category",
+        "select_category": "Select category",
+        "images": "Product Images",
+        "image": "Image",
+        "of": "of",
+        "remove_image": "Remove Image",
+        "affiliate_link": "Affiliate Link",
+        "create": "Create Product",
+        "update": "Update Product"
+    },
+    "categories": {
+        "title": "Categories",
+        "category_name": "Category name",
+        "add": "Add Category",
+        "name": "Name",
+        "actions": "Actions",
+        "edit": "Edit",
+        "delete": "Delete",
+        "confirm_delete": "Are you sure you want to delete this category?"
+    },
+    "category_edit": {
+        "title": "Edit Category",
+        "back": "Back to Categories",
+        "category_name": "Category name",
+        "update": "Update Category"
+    },
+    "products": {
+        "title": "Products",
+        "all_categories": "All Categories",
+        "search": "Search products...",
+        "create": "Create Product",
+        "name": "Name",
+        "description": "Description",
+        "price": "Price",
+        "category": "Category",
+        "actions": "Actions",
+        "edit": "Edit",
+        "delete": "Delete",
+        "confirm_delete": "Are you sure you want to delete this product?",
+        "categories": "Categories",
+        "products": "Products"
     }
 }

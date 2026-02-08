@@ -27,13 +27,13 @@
     "welcome": {
         "hero_title": "Zbuloni Shkëlqimin Tuaj të Përkryer",
         "hero_text": "Kujdesi premium për lëkurën & kozmetikë e zgjedhur nga markat e besueshme.",
-        "shop_now": "Bleni Tani",
+        "shop_now": "Blini Tani",
         "all_products": "Të gjitha Produktet",
         "featured_picks": "🔥 Të Veçuarat",
-        "buy_now": "Bleni →"
+        "buy_now": "Blini →"
     },
     "product": {
-        "buy_now": "Bleni →",
+        "buy_now": "Blini →",
         "add_to_wishlist": "Shto në listën e dëshirave",
         "product_details": "Detajet e Produktit",
         "features": [
@@ -42,5 +42,54 @@
             "I përshtatshëm për të gjitha llojet e lëkurës"
         ],
         "reviews": "{count} komente"
+    },
+    "product_form": {
+        "create_title": "Krijo Produkt",
+        "edit_title": "Ndrysho Produktin",
+        "back": "Kthehu te Produktet",
+        "name": "Emri",
+        "description": "Përshkrimi",
+        "price": "Çmimi",
+        "category": "Kategoria",
+        "select_category": "Zgjidh kategorinë",
+        "images": "Imazhet e Produktit",
+        "image": "Imazhi",
+        "of": "nga",
+        "remove_image": "Hiq Imazhin",
+        "affiliate_link": "Linku i Afilimit",
+        "create": "Krijo Produkt",
+        "update": "Përditëso Produktin"
+    },
+    "categories": {
+        "title": "Kategoritë",
+        "category_name": "Emri i kategorisë",
+        "add": "Shto Kategori",
+        "name": "Emri",
+        "actions": "Veprimet",
+        "edit": "Ndrysho",
+        "delete": "Fshi",
+        "confirm_delete": "Jeni të sigurt që dëshironi ta fshini këtë kategori?"
+    },
+    "category_edit": {
+        "title": "Ndrysho Kategorinë",
+        "back": "Kthehu te Kategoritë",
+        "category_name": "Emri i kategorisë",
+        "update": "Përditëso Kategorinë"
+    },
+    "products": {
+        "title": "Produktet",
+        "all_categories": "Të gjitha kategoritë",
+        "search": "Kërko produkte...",
+        "create": "Shto Produkt",
+        "name": "Emri",
+        "description": "Përshkrimi",
+        "price": "Çmimi",
+        "category": "Kategoria",
+        "actions": "Veprimet",
+        "edit": "Ndrysho",
+        "delete": "Fshi",
+        "confirm_delete": "Jeni të sigurt që dëshironi ta fshini këtë produkt?",
+        "categories": "Kategoritë",
+        "products": "Produktet"
     }
 }
