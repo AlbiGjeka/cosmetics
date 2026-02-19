@@ -3,26 +3,14 @@
         "login": "Login",
         "register": "Register",
         "dashboard": "Dashboard",
-        "brand_primary": "Glow",
-        "brand_secondary": "Beauty"
+        "brand_primary": "Enxhi",
+        "brand_secondary": " Beauty"
     },
     "footer": {
-        "brand": "GlowBeauty",
-        "about_text": "Premium skincare & cosmetics curated from trusted brands.",
-        "quick_links": "Quick Links",
-        "categories": "Categories",
-        "contact": "Contact",
-        "newsletter_title": "Subscribe to our newsletter",
-        "newsletter_text": "Get the latest updates on new products and offers.",
-        "email_placeholder": "Your email",
-        "subscribe": "Subscribe",
-        "privacy": "Privacy Policy",
-        "terms": "Terms of Service",
-        "home": "Home",
-        "featured": "Featured",
-        "skincare": "Skincare",
-        "makeup": "Makeup",
-        "haircare": "Haircare"
+        "brand": "Enxhi Beauty",
+        "about_text": "Handpicked cosmetics & skincare — curated with love for every skin type.",
+        "rights_reserved": "All rights reserved.",
+        "affiliate_disclaimer": "This site contains affiliate links. We may earn a small commission at no extra cost to you."
     },
     "welcome": {
         "hero_title": "Discover Your Perfect Glow",
@@ -36,6 +24,7 @@
     "product": {
         "buy_now": "Buy Now →",
         "add_to_wishlist": "Add to Wishlist",
+        "remove_from_wishlist": "Remove from Wishlist",
         "product_details": "Product Details",
         "features": [
             "Cruelty-free & vegan",
@@ -97,5 +86,16 @@
         "title": "Compare Products",
         "select_product": "Select a product",
         "close": "Close"
+    },
+    "wishlist": {
+        "title": "Wishlist",
+        "empty": "Your wishlist is empty.",
+        "add_more": "Add more products to your wishlist.",
+        "product_name": "Product Name",
+        "price": "Price",
+        "actions": "Actions",
+        "remove": "Remove",
+        "buy_now": "Buy Now",
+        "back_to_shop": "Back to Shop"
     }
 }

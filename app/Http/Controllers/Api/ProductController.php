@@ -143,8 +143,13 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        $isWishlisted = auth()->check()
+            ? auth()->user()->wishlist()->where('product_id', $product->id)->exists()
+            : false;
+
         return Inertia::render('Products/Show', [
-            'product' => $product
+            'product'      => $product,
+            'isWishlisted' => $isWishlisted,
         ]);
     }
 

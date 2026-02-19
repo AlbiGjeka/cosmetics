@@ -1,7 +1,8 @@
-import { Head } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import PublicLayout from '@/layouts/PublicLayout';
 import { useTranslate } from '@/context/LanguageContext';
 import { useEffect, useState } from 'react';
+import type { SharedData } from '@/types';
 
 interface Product {
     id: number;
@@ -15,8 +16,14 @@ interface Product {
     reviewCount?: number;
 }
 
-export default function ProductShow({ product }: { product: Product }) {
+interface Props {
+    product: Product;
+    isWishlisted: boolean;
+}
+
+export default function ProductShow({ product, isWishlisted: initialWishlisted }: Props) {
     const { t } = useTranslate();
+    const { auth } = usePage<SharedData>().props;
 
     const images =
         product.image_urls && product.image_urls.length > 0
@@ -24,6 +31,8 @@ export default function ProductShow({ product }: { product: Product }) {
             : ['/placeholder.png'];
 
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [wishlisted, setWishlisted] = useState(initialWishlisted);
+    const [loading, setLoading] = useState(false);
 
     /* Auto-rotate carousel */
     useEffect(() => {
@@ -37,6 +46,29 @@ export default function ProductShow({ product }: { product: Product }) {
 
         return () => clearInterval(interval);
     }, [images.length]);
+
+    const handleWishlistToggle = () => {
+        if (!auth?.user) {
+            router.visit('/login');
+            return;
+        }
+
+        setLoading(true);
+
+        if (wishlisted) {
+            router.delete(`/wishlist/${product.id}`, {
+                preserveScroll: true,
+                onSuccess: () => setWishlisted(false),
+                onFinish: () => setLoading(false),
+            });
+        } else {
+            router.post(`/wishlist/${product.id}`, {}, {
+                preserveScroll: true,
+                onSuccess: () => setWishlisted(true),
+                onFinish: () => setLoading(false),
+            });
+        }
+    };
 
     return (
         <PublicLayout>
@@ -189,8 +221,33 @@ export default function ProductShow({ product }: { product: Product }) {
                                     {t('product', 'buy_now')}
                                 </a>
 
-                                <button className="rounded-full border-2 border-pink-600 px-6 py-3 text-lg font-medium text-pink-600 transition hover:bg-pink-50">
-                                    {t('product', 'add_to_wishlist')}
+                                <button
+                                    onClick={handleWishlistToggle}
+                                    disabled={loading}
+                                    className={`flex items-center justify-center gap-2 rounded-full border-2 px-6 py-3 text-lg font-medium transition disabled:opacity-60 ${
+                                        wishlisted
+                                            ? 'border-pink-600 bg-pink-600 text-white hover:bg-pink-700'
+                                            : 'border-pink-600 text-pink-600 hover:bg-pink-50'
+                                    }`}
+                                >
+                                    {/* Heart icon */}
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill={wishlisted ? 'currentColor' : 'none'}
+                                        stroke="currentColor"
+                                        strokeWidth={2}
+                                        className="h-5 w-5"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                                        />
+                                    </svg>
+                                    {wishlisted
+                                        ? t('product', 'remove_from_wishlist') as string || 'Remove from Wishlist'
+                                        : t('product', 'add_to_wishlist') as string}
                                 </button>
                             </div>
 

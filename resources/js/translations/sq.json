@@ -3,26 +3,14 @@
         "login": "Kyçu",
         "register": "Regjistrohu",
         "dashboard": "Paneli",
-        "brand_primary": "Glow",
-        "brand_secondary": "Beauty"
+        "brand_primary": "Enxhi",
+        "brand_secondary": " Beauty"
     },
     "footer": {
-        "brand": "GlowBeauty",
-        "about_text": "Kujdesi premium për lëkurën & kozmetikë e zgjedhur nga markat e besueshme.",
-        "quick_links": "Lidhje të shpejta",
-        "categories": "Kategoritë",
-        "contact": "Kontakt",
-        "newsletter_title": "Abonohu në buletinin tonë",
-        "newsletter_text": "Merr përditësime mbi produktet e reja dhe ofertat.",
-        "email_placeholder": "Email-i juaj",
-        "subscribe": "Abonohu",
-        "privacy": "Politika e Privatësisë",
-        "terms": "Kushtet e Shërbimit",
-        "home": "Kreu",
-        "featured": "Të veçuarat",
-        "skincare": "Kujdesi i lëkurës",
-        "makeup": "Makeup",
-        "haircare": "Kujdesi për flokët"
+        "brand": "Enxhi Beauty",
+        "about_text": "Kozmetikë dhe kujdes lëkure i zgjedhur me dashuri — për çdo lloj lëkure.",
+        "rights_reserved": "Të gjitha të drejtat e rezervuara.",
+        "affiliate_disclaimer": "Kjo faqe përmban lidhje afiliati. Mund të fitojmë një komision të vogël pa kosto shtesë për ju."
     },
     "welcome": {
         "hero_title": "Zbuloni Shkëlqimin Tuaj të Përkryer",
@@ -36,6 +24,7 @@
     "product": {
         "buy_now": "Blini →",
         "add_to_wishlist": "Shto në listën e dëshirave",
+        "remove_from_wishlist": "Hiq nga lista e dëshirave",
         "product_details": "Detajet e Produktit",
         "features": [
             "Pa përkujdesje ndaj kafshëve & vegan",
@@ -97,5 +86,16 @@
         "title": "Krahaso Produkte",
         "select_product": "Zgjidh një produkt",
         "close": "Mbyll"
+    },
+    "wishlist": {
+        "title": "Lista e Dëshirave",
+        "empty": "Lista juaj e dëshirave është bosh.",
+        "add_more": "Shtoni më shumë produkte në listën tuaj të dëshirave.",
+        "product_name": "Emri i Produktit",
+        "price": "Çmimi",
+        "actions": "Veprimet",
+        "remove": "Hiq",
+        "buy_now": "Bli Tani",
+        "back_to_shop": "Kthehu te Dyqani"
     }
 }

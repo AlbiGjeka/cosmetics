@@ -22,7 +22,7 @@ export default function PublicLayout({
 }: PublicLayoutProps) {
     return (
         <>
-            <Head title="GlowBeauty | Premium Cosmetics & Skincare" />
+            <Head title="Enxhi Beauty | Discover Your Perfect Look" />
             <div className="flex min-h-screen flex-col bg-[#fdf7f8] text-gray-900">
                 {/* Header */}
                 <Header auth={auth} />
