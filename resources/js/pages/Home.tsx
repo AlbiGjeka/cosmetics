@@ -32,10 +32,12 @@ function ProductCard({
     product,
     categoryName,
     buyNowLabel,
+    viewLabel,
 }: {
     product: Product;
     categoryName: string;
     buyNowLabel: string;
+    viewLabel: string;
 }) {
     const imgUrl =
         product.image_urls?.length > 0
@@ -54,26 +56,47 @@ function ProductCard({
                         style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s ease' }}
                     />
                 </Link>
-                {/* Hover overlay */}
-                <div className="card-overlay">
-                    <a
-                        href={`/go/${product.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                {/* Hover overlay — vertical buttons */}
+                <div className="card-overlay" style={{ flexDirection: 'column', gap: '8px' }}>
+                    <Link
+                        href={`/product/${product.id}`}
                         style={{
-                            padding: '10px 24px',
-                            border: '1px solid white',
+                            padding: '10px 28px',
+                            border: '0.5px solid white',
                             color: 'white',
-                            fontSize: '9px',
+                            fontSize: '8px',
                             letterSpacing: '3px',
                             textTransform: 'uppercase',
                             textDecoration: 'none',
                             fontFamily: "'Montserrat', sans-serif",
                             background: 'transparent',
                             transition: 'background .2s',
+                            textAlign: 'center',
                         }}
                         onMouseEnter={e => ((e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.15)')}
                         onMouseLeave={e => ((e.currentTarget as HTMLElement).style.background = 'transparent')}
+                    >
+                        {viewLabel}
+                    </Link>
+                    <a
+                        href={`/go/${product.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                            padding: '10px 28px',
+                            border: '0.5px solid white',
+                            color: DARK,
+                            fontSize: '8px',
+                            letterSpacing: '3px',
+                            textTransform: 'uppercase',
+                            textDecoration: 'none',
+                            fontFamily: "'Montserrat', sans-serif",
+                            background: 'white',
+                            transition: 'background .2s, color .2s',
+                            textAlign: 'center',
+                        }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = GOLD; (e.currentTarget as HTMLElement).style.color = 'white'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'white'; (e.currentTarget as HTMLElement).style.color = DARK; }}
                     >
                         {buyNowLabel}
                     </a>
@@ -160,6 +183,7 @@ export default function Welcome({
     ];
 
     const buyNowLabel = t('welcome', 'buy_now') as string;
+    const viewLabel   = t('welcome', 'view') as string || 'View';
 
     return (
         <>
@@ -266,6 +290,7 @@ export default function Welcome({
                                             product={product}
                                             categoryName={category.name}
                                             buyNowLabel={buyNowLabel}
+                                            viewLabel={viewLabel}
                                         />
                                     ))}
                                 </div>
