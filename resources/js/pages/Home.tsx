@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import { useTranslate } from '@/context/LanguageContext';
 import CompareProductsModal from '@/components/CompareProductsModal';
 import BeautyQuiz from '@/components/BeautyQuiz';
+import { useLuxuryTheme } from '@/hooks/use-luxury-theme';
 
 interface Product {
     id: number;
@@ -23,12 +24,6 @@ interface Category {
     products: Product[];
 }
 
-const GOLD     = '#C9A84C';
-const OFFWHITE = '#F8F6F2';
-const DARK     = '#0A0A0A';
-const BORDER   = '#E0D8CC';
-const MUTED    = '#7A7268';
-
 /* ── Product Card ───────────────────────────────────────────── */
 function ProductCard({
     product,
@@ -41,6 +36,7 @@ function ProductCard({
     buyNowLabel: string;
     viewLabel: string;
 }) {
+    const { GOLD, DARK, BORDER, MUTED, OFFWHITE, SURFACE } = useLuxuryTheme();
     const imgUrl =
         product.image_urls?.length > 0
             ? `/storage/${product.image_urls[0]}`
@@ -132,13 +128,14 @@ function ProductCard({
 
 /* ── Featured Strip ─────────────────────────────────────────── */
 function FeaturedStrip({ product, categoryName }: { product: Product; categoryName: string }) {
+    const { GOLD, DARK, BORDER, MUTED, OFFWHITE, SURFACE } = useLuxuryTheme();
     const imgUrl =
         product.image_urls?.length > 0
             ? `/storage/${product.image_urls[0]}`
             : '/placeholder.png';
 
     return (
-        <section style={{ borderTop: `0.5px solid ${BORDER}`, borderBottom: `0.5px solid ${BORDER}`, padding: '48px 32px', background: 'white', fontFamily: "'Montserrat', sans-serif" }}>
+        <section style={{ borderTop: `0.5px solid ${BORDER}`, borderBottom: `0.5px solid ${BORDER}`, padding: '48px 32px', background: SURFACE, fontFamily: "'Montserrat', sans-serif" }}>
             <div style={{ maxWidth: '700px', margin: '0 auto', display: 'flex', alignItems: 'center', gap: '40px', flexWrap: 'wrap' }}>
                 <div style={{ width: '120px', height: '155px', flexShrink: 0, overflow: 'hidden', border: `0.5px solid ${BORDER}`, background: OFFWHITE }}>
                     <img src={imgUrl} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -176,6 +173,7 @@ export default function Welcome({
     const { auth } = usePage<SharedData>().props;
     const [activeCategory, setActiveCategory] = useState<number | 'all'>('all');
     const { t } = useTranslate();
+    const { GOLD, DARK, BORDER, MUTED, OFFWHITE, SURFACE } = useLuxuryTheme();
     const [compareOpen, setCompareOpen] = useState(false);
     const [quizOpen, setQuizOpen]       = useState(false);
 

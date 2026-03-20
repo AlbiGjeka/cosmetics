@@ -1,10 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useLuxuryTheme } from '@/hooks/use-luxury-theme';
 
-const GOLD     = '#C9A84C';
-const DARK     = '#0A0A0A';
-const BORDER   = '#E0D8CC';
-const MUTED    = '#7A7268';
-const OFFWHITE = '#F8F6F2';
+const GOLD_STATIC = '#C9A84C'; // used in Confetti (no hook access)
 
 interface Product {
     id: number;
@@ -71,7 +68,7 @@ const REACTIONS = [
 ];
 
 /* ── Confetti ──────────────────────────────────────────────── */
-const CONFETTI_COLORS = [GOLD, '#E0D8CC', DARK, '#fff'];
+const CONFETTI_COLORS = [GOLD_STATIC, '#E0D8CC', '#0A0A0A', '#fff'];
 function Confetti() {
     const particles = Array.from({ length: 28 }, (_, i) => ({
         id:       i,
@@ -106,6 +103,7 @@ function Confetti() {
 
 /* ── Main component ─────────────────────────────────────────── */
 export default function BeautyQuiz({ open, onClose, categories }: Props) {
+    const { GOLD, DARK, BORDER, MUTED, OFFWHITE, SURFACE } = useLuxuryTheme();
     const [step, setStep]           = useState(0);
     const [answers, setAnswers]     = useState<number[]>([]);
     const [selected, setSelected]   = useState<number | null>(null);
@@ -211,7 +209,7 @@ export default function BeautyQuiz({ open, onClose, categories }: Props) {
             }}
         >
             <div style={{
-                background: 'white',
+                background: SURFACE,
                 border: `0.5px solid ${BORDER}`,
                 width: '100%',
                 maxWidth: '520px',
@@ -287,7 +285,7 @@ export default function BeautyQuiz({ open, onClose, categories }: Props) {
                                             key={i}
                                             onClick={() => setSelected(i)}
                                             style={{
-                                                background:   active ? OFFWHITE : 'white',
+                                                background:   active ? OFFWHITE : SURFACE,
                                                 border:       `1px solid ${active ? GOLD : BORDER}`,
                                                 padding:      '16px 14px',
                                                 cursor:       'pointer',

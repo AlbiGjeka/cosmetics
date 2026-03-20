@@ -3,6 +3,7 @@ import PublicLayout from '@/layouts/PublicLayout';
 import { useTranslate } from '@/context/LanguageContext';
 import { useEffect, useState } from 'react';
 import type { SharedData } from '@/types';
+import { useLuxuryTheme } from '@/hooks/use-luxury-theme';
 
 interface Product {
     id: number;
@@ -30,15 +31,10 @@ interface Props {
     relatedProducts: RelatedProduct[];
 }
 
-const GOLD   = '#C9A84C';
-const DARK   = '#0A0A0A';
-const BORDER = '#E0D8CC';
-const MUTED  = '#7A7268';
-const OFFWHITE = '#F8F6F2';
-
 export default function ProductShow({ product, isWishlisted: initialWishlisted, relatedProducts }: Props) {
     const { t } = useTranslate();
     const { auth } = usePage<SharedData>().props;
+    const { GOLD, DARK, BORDER, MUTED, OFFWHITE, SURFACE } = useLuxuryTheme();
 
     const images =
         product.image_urls && product.image_urls.length > 0
@@ -117,7 +113,7 @@ export default function ProductShow({ product, isWishlisted: initialWishlisted, 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
 
                             {/* Main image */}
-                            <div style={{ position: 'relative', aspectRatio: '1/1', overflow: 'hidden', border: `0.5px solid ${BORDER}`, background: 'white' }}>
+                            <div style={{ position: 'relative', aspectRatio: '1/1', overflow: 'hidden', border: `0.5px solid ${BORDER}`, background: SURFACE }}>
                                 <img
                                     src={images[currentIndex].startsWith('/') ? images[currentIndex] : `/storage/${images[currentIndex]}`}
                                     alt={`${product.name} ${currentIndex + 1}`}
@@ -155,7 +151,7 @@ export default function ProductShow({ product, isWishlisted: initialWishlisted, 
                                                 aspectRatio: '1/1',
                                                 overflow: 'hidden',
                                                 border: `0.5px solid ${currentIndex === i ? GOLD : BORDER}`,
-                                                background: 'white',
+                                                background: SURFACE,
                                                 cursor: 'pointer',
                                                 padding: 0,
                                                 transition: 'border-color .2s',
@@ -288,7 +284,7 @@ export default function ProductShow({ product, isWishlisted: initialWishlisted, 
 
             {/* ── Related Products ──────────────────────── */}
             {relatedProducts.length > 0 && (
-                <div style={{ borderTop: `0.5px solid ${BORDER}`, padding: '48px 32px', background: 'white', fontFamily: "'Montserrat', sans-serif" }}>
+                <div style={{ borderTop: `0.5px solid ${BORDER}`, padding: '48px 32px', background: SURFACE, fontFamily: "'Montserrat', sans-serif" }}>
                     <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
                         <p style={{ fontSize: '9px', letterSpacing: '4px', textTransform: 'uppercase', color: MUTED, marginBottom: '6px' }}>
                             You may also like
@@ -301,7 +297,7 @@ export default function ProductShow({ product, isWishlisted: initialWishlisted, 
                             {relatedProducts.map(p => {
                                 const img = p.image_urls?.length > 0 ? `/storage/${p.image_urls[0]}` : '/placeholder.png';
                                 return (
-                                    <div key={p.id} style={{ background: 'white', position: 'relative' }}>
+                                    <div key={p.id} style={{ background: SURFACE, position: 'relative' }}>
                                         {/* Badge */}
                                         {p.is_featured && (
                                             <div style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 1, background: GOLD, padding: '3px 8px' }}>

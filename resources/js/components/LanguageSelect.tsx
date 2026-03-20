@@ -1,20 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslate } from '@/context/LanguageContext';
+import { useLuxuryTheme } from '@/hooks/use-luxury-theme';
 
 const LANGUAGES = [
     { code: 'en', label: 'EN' },
     { code: 'sq', label: 'SQ' },
 ];
 
-const GOLD   = '#C9A84C';
-const BORDER = '#E0D8CC';
-const MUTED  = '#7A7268';
-const DARK   = '#0A0A0A';
-
 export default function LanguageSelect() {
     const { lang, setLang } = useTranslate();
     const [open, setOpen]   = useState(false);
     const ref               = useRef<HTMLDivElement>(null);
+    const { GOLD, BORDER, MUTED, DARK, OFFWHITE, SURFACE } = useLuxuryTheme();
 
     const current = LANGUAGES.find((l) => l.code === lang);
 
@@ -75,7 +72,7 @@ export default function LanguageSelect() {
                     position: 'absolute',
                     right: 0,
                     top: 'calc(100% + 4px)',
-                    background: 'white',
+                    background: SURFACE,
                     border: `0.5px solid ${BORDER}`,
                     minWidth: '100%',
                     zIndex: 50,
@@ -103,7 +100,7 @@ export default function LanguageSelect() {
                             onMouseEnter={e => {
                                 (e.currentTarget as HTMLElement).style.color = GOLD;
                                 (e.currentTarget as HTMLElement).style.borderLeftColor = GOLD;
-                                (e.currentTarget as HTMLElement).style.background = '#F8F6F2';
+                                (e.currentTarget as HTMLElement).style.background = OFFWHITE;
                             }}
                             onMouseLeave={e => {
                                 (e.currentTarget as HTMLElement).style.color = l.code === lang ? GOLD : DARK;

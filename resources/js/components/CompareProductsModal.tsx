@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslate } from '@/context/LanguageContext';
+import { useLuxuryTheme } from '@/hooks/use-luxury-theme';
 
 interface Product {
     id: number;
@@ -15,14 +16,9 @@ interface CompareProductsModalProps {
     products: Product[];
 }
 
-const GOLD     = '#C9A84C';
-const DARK     = '#0A0A0A';
-const BORDER   = '#E0D8CC';
-const MUTED    = '#7A7268';
-const OFFWHITE = '#F8F6F2';
-
 export default function CompareProductsModal({ open, onClose, products }: CompareProductsModalProps) {
     const { t } = useTranslate();
+    const { GOLD, DARK, BORDER, MUTED, OFFWHITE, SURFACE } = useLuxuryTheme();
     const [leftId, setLeftId]   = useState<number | ''>('');
     const [rightId, setRightId] = useState<number | ''>('');
 
@@ -40,7 +36,7 @@ export default function CompareProductsModal({ open, onClose, products }: Compar
             <div style={{ position: 'fixed', inset: 0, background: 'rgba(10,10,10,0.6)' }} />
 
             {/* Modal */}
-            <div style={{ position: 'relative', background: OFFWHITE, border: `0.5px solid ${BORDER}`, width: '100%', maxWidth: '860px', fontFamily: "'Montserrat', sans-serif" }}>
+            <div style={{ position: 'relative', background: SURFACE, border: `0.5px solid ${BORDER}`, width: '100%', maxWidth: '860px', fontFamily: "'Montserrat', sans-serif" }}>
 
                 {/* Header */}
                 <div style={{ padding: '24px 32px', borderBottom: `0.5px solid ${BORDER}`, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
@@ -69,7 +65,7 @@ export default function CompareProductsModal({ open, onClose, products }: Compar
                             { value: leftId,  onChange: (v: number | '') => setLeftId(v) },
                             { value: rightId, onChange: (v: number | '') => setRightId(v) },
                         ].map((sel, i) => (
-                            <div key={i} style={{ background: 'white', padding: '16px 20px' }}>
+                            <div key={i} style={{ background: SURFACE, padding: '16px 20px' }}>
                                 <label style={{ fontSize: '9px', letterSpacing: '3px', textTransform: 'uppercase', color: MUTED, display: 'block', marginBottom: '8px' }}>
                                     {i === 0 ? 'Product A' : 'Product B'}
                                 </label>
@@ -111,9 +107,10 @@ export default function CompareProductsModal({ open, onClose, products }: Compar
 }
 
 function CompareCard({ product, t }: { product?: Product; t: (g: string, k: string) => string }) {
+    const { GOLD, DARK, BORDER, MUTED, OFFWHITE, SURFACE } = useLuxuryTheme();
     if (!product) {
         return (
-            <div style={{ background: 'white', padding: '32px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '240px' }}>
+            <div style={{ background: SURFACE, padding: '32px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '240px' }}>
                 <div style={{ width: '40px', height: '40px', border: `0.5px dashed ${BORDER}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '12px' }}>
                     <span style={{ color: BORDER, fontSize: '20px' }}>+</span>
                 </div>
@@ -125,7 +122,7 @@ function CompareCard({ product, t }: { product?: Product; t: (g: string, k: stri
     }
 
     return (
-        <div style={{ background: 'white', padding: '24px' }}>
+        <div style={{ background: SURFACE, padding: '24px' }}>
             {/* Image */}
             <div style={{ aspectRatio: '3/4', overflow: 'hidden', background: '#F8F6F2', border: `0.5px solid ${BORDER}`, marginBottom: '20px' }}>
                 {product.image_url ? (

@@ -19,16 +19,28 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('dashboard', function () {
-    $wishlistItems = auth()->user()
-        ->wishlist()
-        ->with('category')
-        ->latest('wishlists.created_at')
-        ->take(6)
-        ->get();
+    $user          = auth()->user();
+    $wishlistItems = $user->wishlist()->with('category')->latest('wishlists.created_at')->take(6)->get();
+    $wishlistCount = $user->wishlist()->count();
+
+    // Recommended: products from same categories as wishlist, not already saved
+    $wishlistCategoryIds = $wishlistItems->pluck('category_id')->unique()->filter();
+    $wishlistProductIds  = $wishlistItems->pluck('id');
+    $recommendedProducts = \App\Models\Product::whereIn('category_id', $wishlistCategoryIds)
+        ->whereNotIn('id', $wishlistProductIds)
+        ->inRandomOrder()
+        ->take(4)
+        ->get(['id', 'name', 'price', 'image_urls']);
+
+    // New arrivals: last 4 added products
+    $recentProducts = \App\Models\Product::latest()->take(4)->get(['id', 'name', 'price', 'image_urls']);
 
     return Inertia::render('dashboard', [
-        'wishlistItems' => $wishlistItems,
-        'wishlistCount' => auth()->user()->wishlist()->count(),
+        'wishlistItems'       => $wishlistItems,
+        'wishlistCount'       => $wishlistCount,
+        'recommendedProducts' => $recommendedProducts,
+        'recentProducts'      => $recentProducts,
+        'memberSince'         => $user->created_at->format('M Y'),
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 

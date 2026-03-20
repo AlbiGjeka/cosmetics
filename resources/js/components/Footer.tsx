@@ -1,13 +1,10 @@
 import { useTranslate } from '@/context/LanguageContext';
-
-const GOLD     = '#C9A84C';
-const OFFWHITE = '#F8F6F2';
-const BORDER   = '#E0D8CC';
-const MUTED    = '#7A7268';
-const LIGHT    = '#bbb';
+import { useLuxuryTheme } from '@/hooks/use-luxury-theme';
 
 export default function Footer() {
     const { t } = useTranslate();
+    const { GOLD, OFFWHITE, BORDER, MUTED } = useLuxuryTheme();
+    const LIGHT = MUTED;
     const year = new Date().getFullYear();
 
     const social = (label: string, path: string) => (
