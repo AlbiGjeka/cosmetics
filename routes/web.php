@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AffiliateController;
+use App\Http\Controllers\AnalyticsController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\WishlistController;
@@ -56,6 +58,12 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 });
 
 Route::get('/product/{product}', [ProductController::class, 'show'])->name('product.show');
+
+Route::get('/go/{product}', [AffiliateController::class, 'redirect'])->name('affiliate.redirect');
+
+Route::middleware(['auth', 'verified', 'admin'])->group(function () {
+    Route::get('/dashboard/analytics', [AnalyticsController::class, 'index'])->name('analytics.index');
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');

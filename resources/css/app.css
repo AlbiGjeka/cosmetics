@@ -141,3 +141,95 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* ── Luxury Public Site ─────────────────────────────────────── */
+
+.font-display {
+  font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 22s linear infinite;
+  display: inline-flex;
+}
+
+.btn-luxury {
+  display: inline-block;
+  padding: 13px 36px;
+  font-size: 9px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-decoration: none;
+  border: 1px solid transparent;
+  font-family: 'Montserrat', sans-serif;
+}
+.btn-luxury-dark {
+  background: #0A0A0A;
+  color: #F8F6F2 !important;
+  border-color: #0A0A0A;
+}
+.btn-luxury-dark:hover {
+  background: transparent !important;
+  color: #0A0A0A !important;
+}
+.btn-luxury-ghost {
+  background: transparent;
+  color: #0A0A0A;
+  border-color: #E0D8CC;
+}
+.btn-luxury-ghost:hover {
+  border-color: #C9A84C;
+  color: #C9A84C;
+}
+
+.luxury-card {
+  background: white;
+  border: 0.5px solid #E0D8CC;
+  transition: border-color 0.3s;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.luxury-card:hover {
+  border-color: #C9A84C;
+}
+.luxury-card .card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.luxury-card:hover .card-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.luxury-filter-tab {
+  padding: 8px 20px;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border: 0.5px solid transparent;
+  background: none;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  transition: all 0.2s;
+  color: #7A7268;
+}
+.luxury-filter-tab:hover,
+.luxury-filter-tab.active {
+  border-color: #C9A84C;
+  color: #C9A84C;
+}

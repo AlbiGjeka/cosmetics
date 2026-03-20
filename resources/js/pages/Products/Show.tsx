@@ -21,6 +21,12 @@ interface Props {
     isWishlisted: boolean;
 }
 
+const GOLD   = '#C9A84C';
+const DARK   = '#0A0A0A';
+const BORDER = '#E0D8CC';
+const MUTED  = '#7A7268';
+const OFFWHITE = '#F8F6F2';
+
 export default function ProductShow({ product, isWishlisted: initialWishlisted }: Props) {
     const { t } = useTranslate();
     const { auth } = usePage<SharedData>().props;
@@ -34,27 +40,17 @@ export default function ProductShow({ product, isWishlisted: initialWishlisted }
     const [wishlisted, setWishlisted] = useState(initialWishlisted);
     const [loading, setLoading] = useState(false);
 
-    /* Auto-rotate carousel */
     useEffect(() => {
         if (images.length <= 1) return;
-
         const interval = setInterval(() => {
-            setCurrentIndex((prev) =>
-                prev === images.length - 1 ? 0 : prev + 1,
-            );
+            setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
         }, 15000);
-
         return () => clearInterval(interval);
     }, [images.length]);
 
     const handleWishlistToggle = () => {
-        if (!auth?.user) {
-            router.visit('/login');
-            return;
-        }
-
+        if (!auth?.user) { router.visit('/login'); return; }
         setLoading(true);
-
         if (wishlisted) {
             router.delete(`/wishlist/${product.id}`, {
                 preserveScroll: true,
@@ -70,153 +66,142 @@ export default function ProductShow({ product, isWishlisted: initialWishlisted }
         }
     };
 
+    const finalPrice = (product.price - (product.price * (product.discount || 0)) / 100).toFixed(2);
+
     return (
         <PublicLayout>
             <Head title={product.name} />
 
-            <div className="bg-gradient-to-b from-pink-50 to-white">
-                <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                    <div className="lg:grid lg:grid-cols-2 lg:gap-x-12">
-                        {/* IMAGE GALLERY */}
-                        <div className="flex flex-col-reverse gap-4">
+            <div style={{ background: OFFWHITE, minHeight: '100vh', fontFamily: "'Montserrat', sans-serif" }}>
+                <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 32px' }}>
+
+                    {/* Breadcrumb */}
+                    <p style={{ fontSize: '9px', letterSpacing: '3px', textTransform: 'uppercase', color: MUTED, marginBottom: '40px' }}>
+                        <a href="/" style={{ color: MUTED, textDecoration: 'none' }}>Store</a>
+                        <span style={{ margin: '0 8px', color: BORDER }}>·</span>
+                        <span style={{ color: GOLD }}>{product.name}</span>
+                    </p>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'start' }}
+                         className="block lg:grid">
+
+                        {/* ── IMAGE GALLERY ─────────────────────────── */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+
+                            {/* Main image */}
+                            <div style={{ position: 'relative', aspectRatio: '1/1', overflow: 'hidden', border: `0.5px solid ${BORDER}`, background: 'white' }}>
+                                <img
+                                    src={images[currentIndex].startsWith('/') ? images[currentIndex] : `/storage/${images[currentIndex]}`}
+                                    alt={`${product.name} ${currentIndex + 1}`}
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity .4s' }}
+                                />
+
+                                {product.discount && (
+                                    <span style={{ position: 'absolute', top: '16px', left: '16px', padding: '4px 12px', background: DARK, color: '#fff', fontSize: '8px', letterSpacing: '2px', textTransform: 'uppercase' }}>
+                                        -{product.discount}%
+                                    </span>
+                                )}
+
+                                {images.length > 1 && (
+                                    <>
+                                        <button
+                                            onClick={() => setCurrentIndex(currentIndex === 0 ? images.length - 1 : currentIndex - 1)}
+                                            style={{ position: 'absolute', top: '50%', left: '12px', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.9)', border: `0.5px solid ${BORDER}`, width: '36px', height: '36px', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                        >‹</button>
+                                        <button
+                                            onClick={() => setCurrentIndex(currentIndex === images.length - 1 ? 0 : currentIndex + 1)}
+                                            style={{ position: 'absolute', top: '50%', right: '12px', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.9)', border: `0.5px solid ${BORDER}`, width: '36px', height: '36px', cursor: 'pointer', fontSize: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                        >›</button>
+                                    </>
+                                )}
+                            </div>
+
                             {/* Thumbnails */}
-                            <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block">
-                                <div className="grid grid-cols-4 gap-4">
+                            {images.length > 1 && (
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
                                     {images.slice(0, 4).map((url, i) => (
                                         <button
                                             key={i}
                                             onClick={() => setCurrentIndex(i)}
-                                            className={`relative aspect-square overflow-hidden rounded-xl bg-white shadow-sm transition ${
-                                                currentIndex === i
-                                                    ? 'ring-2 ring-pink-500'
-                                                    : 'hover:shadow-md'
-                                            }`}
+                                            style={{
+                                                aspectRatio: '1/1',
+                                                overflow: 'hidden',
+                                                border: `0.5px solid ${currentIndex === i ? GOLD : BORDER}`,
+                                                background: 'white',
+                                                cursor: 'pointer',
+                                                padding: 0,
+                                                transition: 'border-color .2s',
+                                            }}
                                         >
                                             <img
-                                                src={`/storage/${url}`}
+                                                src={url.startsWith('/') ? url : `/storage/${url}`}
                                                 alt={`${product.name} ${i + 1}`}
-                                                className="h-full w-full object-cover"
+                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                 loading="lazy"
                                             />
                                         </button>
                                     ))}
                                 </div>
-                            </div>
-
-                            {/* Main carousel image */}
-                            <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-pink-50 shadow-lg">
-                                <img
-                                    src={`/storage/${images[currentIndex]}`}
-                                    alt={`${product.name} ${currentIndex + 1}`}
-                                    className="h-full w-full object-cover transition-opacity duration-500"
-                                    loading="lazy"
-                                />
-
-                                {images.length > 1 && (
-                                    <>
-                                        {/* Left arrow */}
-                                        <button
-                                            onClick={() =>
-                                                setCurrentIndex(
-                                                    currentIndex === 0
-                                                        ? images.length - 1
-                                                        : currentIndex - 1,
-                                                )
-                                            }
-                                            className="absolute cursor-pointer top-1/2 left-3 -translate-y-1/2 rounded-full bg-white/80 p-2 text-xl shadow hover:bg-white"
-                                        >
-                                            ‹
-                                        </button>
-
-                                        {/* Right arrow */}
-                                        <button
-                                            onClick={() =>
-                                                setCurrentIndex(
-                                                    currentIndex ===
-                                                        images.length - 1
-                                                        ? 0
-                                                        : currentIndex + 1,
-                                                )
-                                            }
-                                            className="absolute cursor-pointer top-1/2 right-3 -translate-y-1/2 rounded-full bg-white/80 p-2 text-xl shadow hover:bg-white"
-                                        >
-                                            ›
-                                        </button>
-                                    </>
-                                )}
-                            </div>
+                            )}
                         </div>
 
-                        {/* PRODUCT INFO */}
-                        <div className="mt-8 px-4 sm:px-0 lg:mt-0">
-                            <div className="flex items-center justify-between">
-                                <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-                                    {product.name}
-                                </h1>
+                        {/* ── PRODUCT INFO ──────────────────────────── */}
+                        <div style={{ paddingTop: '8px' }}>
 
-                                <div className="flex items-center gap-2">
-                                    <div className="flex items-center">
+                            {/* Category label */}
+                            <p style={{ fontSize: '9px', letterSpacing: '4px', textTransform: 'uppercase', color: GOLD, marginBottom: '12px' }}>
+                                Beauty
+                            </p>
+
+                            {/* Title */}
+                            <h1 className="font-display" style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 300, lineHeight: 1.2, color: DARK, marginBottom: '20px' }}>
+                                {product.name}
+                            </h1>
+
+                            {/* Stars */}
+                            {(product.rating !== undefined) && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}>
+                                    <div style={{ display: 'flex', gap: '2px' }}>
                                         {[...Array(5)].map((_, i) => (
-                                            <svg
-                                                key={i}
-                                                className={`h-5 w-5 ${
-                                                    i <
-                                                    Math.floor(
-                                                        product.rating || 0,
-                                                    )
-                                                        ? 'text-yellow-400'
-                                                        : 'text-gray-300'
-                                                }`}
-                                                fill="currentColor"
-                                                viewBox="0 0 20 20"
-                                            >
-                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                            <svg key={i} width="14" height="14" viewBox="0 0 20 20" fill={i < Math.floor(product.rating || 0) ? GOLD : BORDER}>
+                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                                             </svg>
                                         ))}
                                     </div>
-
-                                    <p className="text-sm text-gray-600">
-                                        {t('product', 'reviews').replace(
-                                            '{count}',
-                                            String(product.reviewCount || 0),
-                                        )}
-                                    </p>
+                                    <span style={{ fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase', color: MUTED }}>
+                                        {t('product', 'reviews').replace('{count}', String(product.reviewCount || 0))}
+                                    </span>
                                 </div>
-                            </div>
+                            )}
+
+                            {/* Divider */}
+                            <div style={{ height: '0.5px', background: BORDER, marginBottom: '24px' }} />
 
                             {/* Price */}
-                            <div className="mt-6">
-                                <div className="flex items-end gap-3">
-                                    <p className="text-3xl font-bold text-gray-900">
-                                        $
-                                        {(
-                                            product.price -
-                                            (product.price *
-                                                (product.discount || 0)) /
-                                                100
-                                        ).toFixed(2)}
-                                    </p>
-
-                                    {product.discount && (
-                                        <>
-                                            <p className="text-lg text-gray-400 line-through">
-                                                ${product.price}
-                                            </p>
-                                            <div className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
-                                                -{product.discount}%
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '32px' }}>
+                                <span className="font-display" style={{ fontSize: '32px', fontWeight: 300, color: DARK }}>
+                                    ${finalPrice}
+                                </span>
+                                {product.discount && (
+                                    <>
+                                        <span style={{ fontSize: '16px', color: MUTED, textDecoration: 'line-through' }}>
+                                            ${product.price}
+                                        </span>
+                                        <span style={{ fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase', color: GOLD }}>
+                                            Save {product.discount}%
+                                        </span>
+                                    </>
+                                )}
                             </div>
 
                             {/* Actions */}
-                            <div className="mt-8 flex flex-col gap-4">
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '40px' }}>
                                 <a
-                                    href={product.affiliate_link}
+                                    href={`/go/${product.id}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="rounded-full bg-pink-600 px-6 py-3 text-center text-lg font-medium text-white shadow-sm transition hover:bg-pink-700"
+                                    className="btn-luxury btn-luxury-dark"
+                                    style={{ textAlign: 'center', display: 'block' }}
                                 >
                                     {t('product', 'buy_now')}
                                 </a>
@@ -224,54 +209,50 @@ export default function ProductShow({ product, isWishlisted: initialWishlisted }
                                 <button
                                     onClick={handleWishlistToggle}
                                     disabled={loading}
-                                    className={`flex items-center justify-center gap-2 rounded-full border-2 px-6 py-3 text-lg font-medium transition disabled:opacity-60 ${
-                                        wishlisted
-                                            ? 'border-pink-600 bg-pink-600 text-white hover:bg-pink-700'
-                                            : 'border-pink-600 text-pink-600 hover:bg-pink-50'
-                                    }`}
+                                    className="btn-luxury"
+                                    style={{
+                                        border: `1px solid ${wishlisted ? GOLD : BORDER}`,
+                                        color: wishlisted ? GOLD : MUTED,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '8px',
+                                        width: '100%',
+                                        opacity: loading ? 0.6 : 1,
+                                    }}
                                 >
-                                    {/* Heart icon */}
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                         fill={wishlisted ? 'currentColor' : 'none'}
-                                        stroke="currentColor"
-                                        strokeWidth={2}
-                                        className="h-5 w-5"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-                                        />
+                                        stroke="currentColor" strokeWidth={1.5}
+                                        width="14" height="14">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                                     </svg>
                                     {wishlisted
-                                        ? t('product', 'remove_from_wishlist') as string || 'Remove from Wishlist'
-                                        : t('product', 'add_to_wishlist') as string}
+                                        ? (t('product', 'remove_from_wishlist') as string || 'Remove from Wishlist')
+                                        : (t('product', 'add_to_wishlist') as string)}
                                 </button>
                             </div>
 
+                            {/* Divider */}
+                            <div style={{ height: '0.5px', background: BORDER, marginBottom: '32px' }} />
+
                             {/* Details */}
-                            <section className="mt-12">
-                                <h2 className="text-lg font-bold text-gray-900">
+                            <div>
+                                <p style={{ fontSize: '9px', letterSpacing: '4px', textTransform: 'uppercase', color: MUTED, marginBottom: '16px' }}>
                                     {t('product', 'product_details')}
-                                </h2>
-
-                                <div className="prose mt-4 max-w-none text-gray-600">
-                                    <p>{product.description}</p>
-
-                                    <ul className="mt-4 list-disc pl-5">
-                                        {(
-                                            t(
-                                                'product',
-                                                'features',
-                                            ) as unknown as string[]
-                                        ).map((feature, i) => (
-                                            <li key={i}>{feature}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </section>
+                                </p>
+                                <p className="font-display" style={{ fontSize: '16px', fontWeight: 300, color: MUTED, lineHeight: 1.8 }}>
+                                    {product.description}
+                                </p>
+                                <ul style={{ marginTop: '16px', paddingLeft: '0', listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                    {(t('product', 'features') as unknown as string[]).map((feature, i) => (
+                                        <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '11px', color: MUTED, letterSpacing: '1px' }}>
+                                            <span style={{ color: GOLD, marginTop: '2px' }}>·</span>
+                                            {feature}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

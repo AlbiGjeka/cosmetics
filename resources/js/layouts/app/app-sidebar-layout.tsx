@@ -1,8 +1,7 @@
 import { usePage } from '@inertiajs/react';
-import { LayoutGrid, Package, Tag } from 'lucide-react';
+import { BarChart2, LayoutGrid, Package, ShoppingBag, Tag } from 'lucide-react';
 import { AppContent } from '@/components/app-content';
 import { AppShell } from '@/components/app-shell';
-import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -21,24 +20,26 @@ import { Link } from '@inertiajs/react';
 
 function SidebarLogo() {
     return (
-        <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-pink-100">
-                <svg width="20" height="20" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <ellipse cx="16" cy="9"  rx="3" ry="5.5" fill="#ec4899" />
-                    <ellipse cx="16" cy="23" rx="3" ry="5.5" fill="#ec4899" />
-                    <ellipse cx="9"  cy="16" rx="5.5" ry="3" fill="#f9a8d4" />
-                    <ellipse cx="23" cy="16" rx="5.5" ry="3" fill="#f9a8d4" />
-                    <ellipse cx="10.9" cy="10.9" rx="3" ry="5.5" transform="rotate(-45 10.9 10.9)" fill="#ec4899" opacity="0.7" />
-                    <ellipse cx="21.1" cy="21.1" rx="3" ry="5.5" transform="rotate(-45 21.1 21.1)" fill="#ec4899" opacity="0.7" />
-                    <ellipse cx="21.1" cy="10.9" rx="3" ry="5.5" transform="rotate(45 21.1 10.9)" fill="#f9a8d4" opacity="0.7" />
-                    <ellipse cx="10.9" cy="21.1" rx="3" ry="5.5" transform="rotate(45 10.9 21.1)" fill="#f9a8d4" opacity="0.7" />
-                    <circle cx="16" cy="16" r="4" fill="#be185d" />
-                    <circle cx="16" cy="16" r="2" fill="#fce7f3" />
-                </svg>
+        <div className="flex items-center gap-3">
+            {/* Gold monogram badge */}
+            <div
+                className="flex h-9 w-9 shrink-0 items-center justify-center"
+                style={{ border: '0.5px solid #C9A84C', background: '#F8F6F2' }}
+            >
+                <span
+                    className="font-display"
+                    style={{ fontSize: '18px', fontWeight: 300, color: '#C9A84C', lineHeight: 1 }}
+                >
+                    E
+                </span>
             </div>
-            <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">
-                    <span className="text-pink-600">Enxhi</span> Beauty
+
+            <div className="grid flex-1 text-left leading-tight">
+                <span className="font-display truncate" style={{ fontSize: '14px', fontWeight: 300, letterSpacing: '4px', textTransform: 'uppercase', color: '#0A0A0A' }}>
+                    Enxhi <span style={{ color: '#C9A84C' }}>B</span>eauty
+                </span>
+                <span className="truncate" style={{ fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase', color: '#7A7268', fontFamily: "'Montserrat', sans-serif" }}>
+                    Affiliate Dashboard
                 </span>
             </div>
         </div>
@@ -50,30 +51,51 @@ function SmartSidebar() {
     const isAdmin = (auth?.user as { role?: string })?.role === 'admin';
 
     const mainNavItems: NavItem[] = [
-        { title: 'Dashboard', href: dashboard(), icon: LayoutGrid },
+        { title: 'Dashboard', href: dashboard().url, icon: LayoutGrid },
         ...(isAdmin ? [
             { title: 'Products',   href: '/dashboard/products',   icon: Package },
             { title: 'Categories', href: '/dashboard/categories', icon: Tag },
+            { title: 'Analytics',  href: '/dashboard/analytics',  icon: BarChart2 },
         ] : []),
     ];
 
     return (
         <Sidebar collapsible="icon" variant="inset">
-            <SidebarHeader>
+            <SidebarHeader className="border-b border-sidebar-border/50 pb-3">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href={dashboard().url} prefetch>
                                 <SidebarLogo />
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
-            <SidebarContent>
+
+            <SidebarContent className="pt-2">
                 <NavMain items={mainNavItems} />
+
+                {/* Quick link to public store */}
+                <div className="px-3 mt-auto pt-4">
+                    <a
+                        href="/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-center gap-2.5 px-3 py-2.5 transition"
+                        style={{ border: '0.5px solid #E0D8CC', background: '#F8F6F2' }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#C9A84C'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#E0D8CC'; }}
+                    >
+                        <ShoppingBag className="h-3.5 w-3.5 shrink-0" style={{ color: '#C9A84C' }} />
+                        <span className="truncate" style={{ fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase', color: '#7A7268', fontFamily: "'Montserrat', sans-serif" }}>
+                            View public store
+                        </span>
+                    </a>
+                </div>
             </SidebarContent>
-            <SidebarFooter>
+
+            <SidebarFooter className="border-t border-sidebar-border/50 pt-2">
                 <NavUser />
             </SidebarFooter>
         </Sidebar>

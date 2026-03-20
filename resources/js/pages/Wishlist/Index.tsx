@@ -21,6 +21,12 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'My Wishlist', href: '/wishlist' },
 ];
 
+const GOLD     = '#C9A84C';
+const DARK     = '#0A0A0A';
+const BORDER   = '#E0D8CC';
+const MUTED    = '#7A7268';
+const OFFWHITE = '#F8F6F2';
+
 export default function WishlistIndex({ wishlistItems }: Props) {
     const handleRemove = (productId: number) => {
         router.delete(`/wishlist/${productId}`, { preserveScroll: true });
@@ -30,126 +36,92 @@ export default function WishlistIndex({ wishlistItems }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="My Wishlist" />
 
-            <div className="p-6">
-                <div className="mb-6 flex items-center justify-between">
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                        My Wishlist
-                    </h1>
-                    <span className="rounded-full bg-pink-100 px-3 py-1 text-sm font-medium text-pink-700">
-                        {wishlistItems.length}{' '}
-                        {wishlistItems.length === 1 ? 'item' : 'items'}
+            <div style={{ padding: '32px', fontFamily: "'Montserrat', sans-serif" }}>
+
+                {/* Header */}
+                <div style={{ marginBottom: '32px', paddingBottom: '24px', borderBottom: `0.5px solid ${BORDER}`, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+                    <div>
+                        <p style={{ fontSize: '9px', letterSpacing: '4px', textTransform: 'uppercase', color: GOLD, marginBottom: '6px' }}>
+                            Saved items
+                        </p>
+                        <h1 className="font-display" style={{ fontSize: '32px', fontWeight: 300, color: DARK }}>
+                            My Wishlist
+                        </h1>
+                    </div>
+                    <span style={{ fontSize: '9px', letterSpacing: '3px', textTransform: 'uppercase', color: MUTED }}>
+                        {wishlistItems.length} {wishlistItems.length === 1 ? 'item' : 'items'}
                     </span>
                 </div>
 
                 {wishlistItems.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-gray-200 py-20 text-center dark:border-gray-700">
-                        {/* Empty heart */}
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="mb-4 h-16 w-16 text-pink-300"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-                            />
+                    <div style={{ textAlign: 'center', padding: '80px 0', border: `0.5px dashed ${BORDER}` }}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke={BORDER} width="64" height="64" style={{ margin: '0 auto 20px', display: 'block' }}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                         </svg>
-                        <p className="text-lg font-medium text-gray-500 dark:text-gray-400">
-                            Your wishlist is empty
-                        </p>
-                        <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">
-                            Browse products and click "Add to Wishlist" to save them here.
-                        </p>
-                        <Link
-                            href="/"
-                            className="mt-6 rounded-full bg-pink-600 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-pink-700"
-                        >
+                        <p style={{ fontSize: '11px', letterSpacing: '3px', textTransform: 'uppercase', color: MUTED, marginBottom: '8px' }}>Your wishlist is empty</p>
+                        <p style={{ fontSize: '11px', color: MUTED, marginBottom: '28px' }}>Browse products and save your favourites</p>
+                        <Link href="/" className="btn-luxury btn-luxury-dark">
                             Browse Products
                         </Link>
                     </div>
                 ) : (
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '24px' }}>
                         {wishlistItems.map((product) => {
-                            const imgUrl =
-                                product.image_urls && product.image_urls.length > 0
-                                    ? `/storage/${product.image_urls[0]}`
-                                    : '/placeholder.png';
-
-                            const finalPrice = (
-                                product.price -
-                                (product.price * (product.discount || 0)) / 100
-                            ).toFixed(2);
+                            const imgUrl = product.image_urls?.length > 0 ? `/storage/${product.image_urls[0]}` : '/placeholder.png';
+                            const finalPrice = (product.price - (product.price * (product.discount || 0)) / 100).toFixed(2);
 
                             return (
-                                <div
-                                    key={product.id}
-                                    className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
-                                >
+                                <div key={product.id} className="luxury-card">
                                     {/* Image */}
-                                    <Link href={`/product/${product.id}`} className="block aspect-square overflow-hidden bg-gray-50">
-                                        <img
-                                            src={imgUrl}
-                                            alt={product.name}
-                                            className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                                            loading="lazy"
-                                        />
-                                    </Link>
-
-                                    {/* Discount badge */}
-                                    {product.discount && (
-                                        <span className="absolute left-3 top-3 rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
-                                            -{product.discount}%
-                                        </span>
-                                    )}
+                                    <div style={{ aspectRatio: '3/4', overflow: 'hidden', background: OFFWHITE, position: 'relative' }}>
+                                        <Link href={`/product/${product.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
+                                            <img src={imgUrl} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
+                                        </Link>
+                                        {product.discount && (
+                                            <span style={{ position: 'absolute', top: '12px', left: '12px', padding: '3px 10px', background: DARK, color: 'white', fontSize: '8px', letterSpacing: '2px', textTransform: 'uppercase' }}>
+                                                -{product.discount}%
+                                            </span>
+                                        )}
+                                        {/* Remove button */}
+                                        <button
+                                            onClick={() => handleRemove(product.id)}
+                                            title="Remove from wishlist"
+                                            style={{ position: 'absolute', top: '12px', right: '12px', width: '28px', height: '28px', background: 'white', border: `0.5px solid ${BORDER}`, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all .2s' }}
+                                            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#e53e3e'; (e.currentTarget as HTMLElement).style.color = '#e53e3e'; }}
+                                            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = BORDER; (e.currentTarget as HTMLElement).style.color = MUTED; }}
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width="12" height="12">
+                                                <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                            </svg>
+                                        </button>
+                                    </div>
 
                                     {/* Info */}
-                                    <div className="flex flex-1 flex-col p-4">
-                                        <Link
-                                            href={`/product/${product.id}`}
-                                            className="line-clamp-2 text-sm font-semibold text-gray-900 transition hover:text-pink-600 dark:text-white"
-                                        >
-                                            {product.name}
+                                    <div style={{ padding: '14px 16px', borderTop: `0.5px solid ${BORDER}` }}>
+                                        <Link href={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                            <p className="font-display" style={{ fontSize: '15px', fontWeight: 300, color: DARK, marginBottom: '8px', lineHeight: 1.3 }}>
+                                                {product.name}
+                                            </p>
                                         </Link>
-
-                                        <div className="mt-2 flex items-center gap-2">
-                                            <span className="text-base font-bold text-gray-900 dark:text-white">
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                                            <span style={{ fontSize: '13px', fontWeight: 500, color: DARK }}>
                                                 ${finalPrice}
                                             </span>
                                             {product.discount && (
-                                                <span className="text-sm text-gray-400 line-through">
+                                                <span style={{ fontSize: '11px', color: MUTED, textDecoration: 'line-through' }}>
                                                     ${product.price}
                                                 </span>
                                             )}
                                         </div>
-
-                                        <div className="mt-4 flex gap-2">
-                                            <a
-                                                href={product.affiliate_link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex-1 rounded-full bg-pink-600 px-3 py-2 text-center text-xs font-medium text-white transition hover:bg-pink-700"
-                                            >
-                                                Buy Now
-                                            </a>
-                                            <button
-                                                onClick={() => handleRemove(product.id)}
-                                                title="Remove from wishlist"
-                                                className="rounded-full border border-gray-200 p-2 text-gray-400 transition hover:border-red-300 hover:text-red-500 dark:border-gray-600"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                    className="h-4 w-4"
-                                                >
-                                                    <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                                </svg>
-                                            </button>
-                                        </div>
+                                        <a
+                                            href={`/go/${product.id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="btn-luxury btn-luxury-dark"
+                                            style={{ display: 'block', textAlign: 'center', padding: '10px' }}
+                                        >
+                                            Buy Now
+                                        </a>
                                     </div>
                                 </div>
                             );

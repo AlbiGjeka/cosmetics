@@ -28,4 +28,9 @@ class Product extends Model
     {
         return $this->belongsToMany(User::class, 'wishlists')->withTimestamps();
     }
+
+    public function clicks()
+    {
+        return $this->hasMany(AffiliateClick::class);
+    }
 }
