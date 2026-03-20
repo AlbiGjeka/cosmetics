@@ -342,7 +342,9 @@ function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
         href="/"
         className="flex items-center gap-2 text-lg font-semibold text-sidebar-foreground hover:opacity-80 transition-opacity"
       >
-        <h1 className="text-2xl font-bold text-pink-600">Glow<span className="text-gray-900">Beauty</span></h1>
+        <h1 className="font-display" style={{ fontSize: '18px', fontWeight: 300, letterSpacing: '5px', textTransform: 'uppercase', color: '#0A0A0A' }}>
+          Enxhi <span style={{ color: '#C9A84C' }}>B</span>eauty
+        </h1>
       </Link>
     </div>
   );
