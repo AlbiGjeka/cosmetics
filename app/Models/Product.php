@@ -12,11 +12,13 @@ class Product extends Model
         'price',
         'image_urls',
         'affiliate_link',
-        'category_id'
+        'category_id',
+        'is_featured',
     ];
 
     protected $casts = [
-        'image_urls' => 'array',
+        'image_urls'  => 'array',
+        'is_featured' => 'boolean',
     ];
 
     public function category()

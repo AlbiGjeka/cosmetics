@@ -56,6 +56,8 @@ class ProductController extends Controller
             'image_urls.*' => 'nullable|image',
         ]);
 
+        $data['is_featured'] = $request->boolean('is_featured');
+
         if ($request->hasFile('image_urls')) {
             $data['image_urls'] = [];
             foreach ($request->file('image_urls') as $image) {
@@ -89,6 +91,8 @@ class ProductController extends Controller
             'image_urls' => 'array',
             'image_urls.*' => 'nullable',
         ]);
+
+        $data['is_featured'] = $request->boolean('is_featured');
 
         /** ---------------------------------------------
          * 1. Images sent as strings = KEEP
@@ -147,9 +151,15 @@ class ProductController extends Controller
             ? auth()->user()->wishlist()->where('product_id', $product->id)->exists()
             : false;
 
+        $relatedProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->limit(4)
+            ->get(['id', 'name', 'price', 'image_urls', 'is_featured']);
+
         return Inertia::render('Products/Show', [
-            'product'      => $product,
-            'isWishlisted' => $isWishlisted,
+            'product'         => $product,
+            'isWishlisted'    => $isWishlisted,
+            'relatedProducts' => $relatedProducts,
         ]);
     }
 

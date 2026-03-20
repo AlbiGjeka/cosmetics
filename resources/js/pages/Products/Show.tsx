@@ -16,9 +16,18 @@ interface Product {
     reviewCount?: number;
 }
 
+interface RelatedProduct {
+    id: number;
+    name: string;
+    price: number;
+    image_urls: string[];
+    is_featured: boolean;
+}
+
 interface Props {
     product: Product;
     isWishlisted: boolean;
+    relatedProducts: RelatedProduct[];
 }
 
 const GOLD   = '#C9A84C';
@@ -27,7 +36,7 @@ const BORDER = '#E0D8CC';
 const MUTED  = '#7A7268';
 const OFFWHITE = '#F8F6F2';
 
-export default function ProductShow({ product, isWishlisted: initialWishlisted }: Props) {
+export default function ProductShow({ product, isWishlisted: initialWishlisted, relatedProducts }: Props) {
     const { t } = useTranslate();
     const { auth } = usePage<SharedData>().props;
 
@@ -68,9 +77,28 @@ export default function ProductShow({ product, isWishlisted: initialWishlisted }
 
     const finalPrice = (product.price - (product.price * (product.discount || 0)) / 100).toFixed(2);
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: product.name,
+        description: product.description,
+        image: product.image_urls?.length > 0
+            ? product.image_urls.map(u => `${window.location.origin}/storage/${u}`)
+            : [],
+        offers: {
+            '@type': 'Offer',
+            price: finalPrice,
+            priceCurrency: 'USD',
+            availability: 'https://schema.org/InStock',
+            url: window.location.href,
+        },
+    };
+
     return (
         <PublicLayout>
-            <Head title={product.name} />
+            <Head title={product.name}>
+                <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+            </Head>
 
             <div style={{ background: OFFWHITE, minHeight: '100vh', fontFamily: "'Montserrat', sans-serif" }}>
                 <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '48px 32px' }}>
@@ -257,6 +285,50 @@ export default function ProductShow({ product, isWishlisted: initialWishlisted }
                     </div>
                 </div>
             </div>
+
+            {/* ── Related Products ──────────────────────── */}
+            {relatedProducts.length > 0 && (
+                <div style={{ borderTop: `0.5px solid ${BORDER}`, padding: '48px 32px', background: 'white', fontFamily: "'Montserrat', sans-serif" }}>
+                    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+                        <p style={{ fontSize: '9px', letterSpacing: '4px', textTransform: 'uppercase', color: MUTED, marginBottom: '6px' }}>
+                            You may also like
+                        </p>
+                        <h2 className="font-display" style={{ fontSize: '28px', fontWeight: 300, color: DARK, marginBottom: '32px' }}>
+                            From the same collection
+                        </h2>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1px', background: BORDER }}>
+                            {relatedProducts.map(p => {
+                                const img = p.image_urls?.length > 0 ? `/storage/${p.image_urls[0]}` : '/placeholder.png';
+                                return (
+                                    <div key={p.id} style={{ background: 'white', position: 'relative' }}>
+                                        {/* Badge */}
+                                        {p.is_featured && (
+                                            <div style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 1, background: GOLD, padding: '3px 8px' }}>
+                                                <span style={{ fontSize: '7px', letterSpacing: '2px', textTransform: 'uppercase', color: 'white', fontFamily: "'Montserrat', sans-serif" }}>
+                                                    Editor's Choice
+                                                </span>
+                                            </div>
+                                        )}
+                                        <a href={`/product/${p.id}`} style={{ display: 'block', textDecoration: 'none' }}>
+                                            <div style={{ aspectRatio: '3/4', overflow: 'hidden', background: OFFWHITE }}>
+                                                <img src={img} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform .5s' }}
+                                                    onMouseEnter={e => ((e.currentTarget as HTMLElement).style.transform = 'scale(1.04)')}
+                                                    onMouseLeave={e => ((e.currentTarget as HTMLElement).style.transform = 'scale(1)')}
+                                                />
+                                            </div>
+                                            <div style={{ padding: '14px 16px', borderTop: `0.5px solid ${BORDER}` }}>
+                                                <p className="font-display" style={{ fontSize: '15px', fontWeight: 300, color: DARK, marginBottom: '4px' }}>{p.name}</p>
+                                                <p style={{ fontSize: '12px', color: GOLD, fontFamily: "'Montserrat', sans-serif" }}>${p.price}</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            )}
         </PublicLayout>
     );
 }

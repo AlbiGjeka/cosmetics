@@ -11,6 +11,7 @@ interface Product {
     category_id: number;
     image_urls: (File | string)[];
     affiliate_link: string;
+    is_featured: boolean;
     _method?: 'put';
 }
 
@@ -63,6 +64,7 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
         category_id:    product?.category_id || 0,
         image_urls:     product?.image_urls || [],
         affiliate_link: product?.affiliate_link || '',
+        is_featured:    product?.is_featured ?? false,
     });
 
     const images = data.image_urls;
@@ -200,6 +202,42 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
                                     onFocus={e => (e.target as HTMLElement).style.borderBottomColor = GOLD}
                                     onBlur={e => (e.target as HTMLElement).style.borderBottomColor = BORDER}
                                 />
+                            </div>
+
+                            {/* Editor's choice toggle */}
+                            <div style={{ background: 'white', border: `0.5px solid ${BORDER}`, padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <div>
+                                    <p style={fieldLabel}>Editor's Choice</p>
+                                    <p style={{ fontSize: '10px', color: MUTED, fontFamily: "'Montserrat', sans-serif" }}>
+                                        Highlight this product with a gold badge on the homepage
+                                    </p>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => setData('is_featured', !data.is_featured)}
+                                    style={{
+                                        width: '44px',
+                                        height: '24px',
+                                        borderRadius: '12px',
+                                        border: `0.5px solid ${data.is_featured ? GOLD : BORDER}`,
+                                        background: data.is_featured ? GOLD : 'white',
+                                        cursor: 'pointer',
+                                        position: 'relative',
+                                        transition: 'all .2s',
+                                        flexShrink: 0,
+                                    }}
+                                >
+                                    <span style={{
+                                        position: 'absolute',
+                                        top: '3px',
+                                        left: data.is_featured ? '22px' : '3px',
+                                        width: '16px',
+                                        height: '16px',
+                                        borderRadius: '50%',
+                                        background: data.is_featured ? 'white' : BORDER,
+                                        transition: 'left .2s',
+                                    }} />
+                                </button>
                             </div>
                         </div>
 

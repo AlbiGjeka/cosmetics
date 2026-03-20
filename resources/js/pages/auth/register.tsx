@@ -1,111 +1,150 @@
 import { Form, Head } from '@inertiajs/react';
 import InputError from '@/components/input-error';
-import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
 
+const GOLD   = '#C9A84C';
+const DARK   = '#0A0A0A';
+const BORDER = '#E0D8CC';
+const MUTED  = '#7A7268';
+
+const inputStyle: React.CSSProperties = {
+    width: '100%',
+    border: 'none',
+    borderBottom: `0.5px solid ${BORDER}`,
+    background: 'transparent',
+    padding: '10px 0',
+    fontSize: '13px',
+    color: DARK,
+    outline: 'none',
+    fontFamily: "'Montserrat', sans-serif",
+    letterSpacing: '0.5px',
+};
+
+const labelStyle: React.CSSProperties = {
+    fontSize: '8px',
+    letterSpacing: '3px',
+    textTransform: 'uppercase' as const,
+    color: MUTED,
+    display: 'block',
+    marginBottom: '4px',
+};
+
 export default function Register() {
     return (
         <AuthLayout
-            title="Create an account"
-            description="Enter your details below to create your account"
+            title="Create account"
+            description="Join the beauty edit"
         >
             <Head title="Register" />
+
             <Form
                 {...store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}
                 disableWhileProcessing
-                className="flex flex-col gap-6"
+                style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
             >
                 {({ processing, errors }) => (
                     <>
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
-                                <Input
-                                    id="name"
-                                    type="text"
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="name"
-                                    name="name"
-                                    placeholder="Full name"
-                                />
-                                <InputError
-                                    message={errors.name}
-                                    className="mt-2"
-                                />
-                            </div>
+                        {/* Name */}
+                        <div>
+                            <label htmlFor="name" style={labelStyle}>Full name</label>
+                            <input
+                                id="name"
+                                type="text"
+                                name="name"
+                                required
+                                autoFocus
+                                tabIndex={1}
+                                autoComplete="name"
+                                placeholder="Your name"
+                                style={inputStyle}
+                                onFocus={e => (e.currentTarget.style.borderBottomColor = GOLD)}
+                                onBlur={e => (e.currentTarget.style.borderBottomColor = BORDER)}
+                            />
+                            <InputError message={errors.name} />
+                        </div>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="email"
-                                    name="email"
-                                    placeholder="email@example.com"
-                                />
-                                <InputError message={errors.email} />
-                            </div>
+                        {/* Email */}
+                        <div>
+                            <label htmlFor="email" style={labelStyle}>Email address</label>
+                            <input
+                                id="email"
+                                type="email"
+                                name="email"
+                                required
+                                tabIndex={2}
+                                autoComplete="email"
+                                placeholder="email@example.com"
+                                style={inputStyle}
+                                onFocus={e => (e.currentTarget.style.borderBottomColor = GOLD)}
+                                onBlur={e => (e.currentTarget.style.borderBottomColor = BORDER)}
+                            />
+                            <InputError message={errors.email} />
+                        </div>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">Password</Label>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    required
-                                    tabIndex={3}
-                                    autoComplete="new-password"
-                                    name="password"
-                                    placeholder="Password"
-                                />
-                                <InputError message={errors.password} />
-                            </div>
+                        {/* Password */}
+                        <div>
+                            <label htmlFor="password" style={labelStyle}>Password</label>
+                            <input
+                                id="password"
+                                type="password"
+                                name="password"
+                                required
+                                tabIndex={3}
+                                autoComplete="new-password"
+                                placeholder="Password"
+                                style={inputStyle}
+                                onFocus={e => (e.currentTarget.style.borderBottomColor = GOLD)}
+                                onBlur={e => (e.currentTarget.style.borderBottomColor = BORDER)}
+                            />
+                            <InputError message={errors.password} />
+                        </div>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password_confirmation">
-                                    Confirm password
-                                </Label>
-                                <Input
-                                    id="password_confirmation"
-                                    type="password"
-                                    required
-                                    tabIndex={4}
-                                    autoComplete="new-password"
-                                    name="password_confirmation"
-                                    placeholder="Confirm password"
-                                />
-                                <InputError
-                                    message={errors.password_confirmation}
-                                />
-                            </div>
+                        {/* Confirm password */}
+                        <div>
+                            <label htmlFor="password_confirmation" style={labelStyle}>Confirm password</label>
+                            <input
+                                id="password_confirmation"
+                                type="password"
+                                name="password_confirmation"
+                                required
+                                tabIndex={4}
+                                autoComplete="new-password"
+                                placeholder="Confirm password"
+                                style={inputStyle}
+                                onFocus={e => (e.currentTarget.style.borderBottomColor = GOLD)}
+                                onBlur={e => (e.currentTarget.style.borderBottomColor = BORDER)}
+                            />
+                            <InputError message={errors.password_confirmation} />
+                        </div>
 
-                            <Button
-                                type="submit"
-                                className="mt-2 w-full"
-                                tabIndex={5}
-                                data-test="register-user-button"
+                        {/* Divider */}
+                        <div style={{ height: '0.5px', background: BORDER }} />
+
+                        {/* Submit */}
+                        <button
+                            type="submit"
+                            tabIndex={5}
+                            disabled={processing}
+                            className="btn-luxury btn-luxury-dark"
+                            style={{ width: '100%', opacity: processing ? 0.6 : 1, cursor: processing ? 'not-allowed' : 'pointer' }}
+                            data-test="register-user-button"
+                        >
+                            {processing ? 'Creating account…' : 'Create account'}
+                        </button>
+
+                        <p style={{ textAlign: 'center', fontSize: '9px', letterSpacing: '2px', textTransform: 'uppercase', color: MUTED }}>
+                            Already a member?{' '}
+                            <a href={login()} tabIndex={6}
+                                style={{ color: DARK, textDecoration: 'none', borderBottom: `0.5px solid ${DARK}`, paddingBottom: '1px' }}
+                                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = GOLD; (e.currentTarget as HTMLElement).style.borderBottomColor = GOLD; }}
+                                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = DARK; (e.currentTarget as HTMLElement).style.borderBottomColor = DARK; }}
                             >
-                                {processing && <Spinner />}
-                                Create account
-                            </Button>
-                        </div>
-
-                        <div className="text-center text-sm text-muted-foreground">
-                            Already have an account?{' '}
-                            <TextLink href={login()} tabIndex={6}>
-                                Log in
-                            </TextLink>
-                        </div>
+                                Sign in
+                            </a>
+                        </p>
                     </>
                 )}
             </Form>

@@ -13,6 +13,7 @@ interface Product {
     price: number;
     image_urls: string[];
     affiliate_link: string;
+    is_featured: boolean;
 }
 
 interface Category {
@@ -56,6 +57,13 @@ function ProductCard({
                         style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s ease' }}
                     />
                 </Link>
+                {product.is_featured && (
+                    <div style={{ position: 'absolute', top: '12px', left: '12px', background: GOLD, padding: '3px 10px' }}>
+                        <span style={{ fontSize: '7px', letterSpacing: '2px', textTransform: 'uppercase', color: 'white', fontFamily: "'Montserrat', sans-serif" }}>
+                            Editor's Choice
+                        </span>
+                    </div>
+                )}
                 {/* Hover overlay — vertical buttons */}
                 <div className="card-overlay" style={{ flexDirection: 'column', gap: '8px' }}>
                     <Link
