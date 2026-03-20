@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useTranslate } from '@/context/LanguageContext';
 import CompareProductsModal from '@/components/CompareProductsModal';
+import BeautyQuiz from '@/components/BeautyQuiz';
 
 interface Product {
     id: number;
@@ -176,6 +177,7 @@ export default function Welcome({
     const [activeCategory, setActiveCategory] = useState<number | 'all'>('all');
     const { t } = useTranslate();
     const [compareOpen, setCompareOpen] = useState(false);
+    const [quizOpen, setQuizOpen]       = useState(false);
 
     const allProducts = categories.flatMap((c) => c.products);
     const featuredProduct = allProducts[0] ?? null;
@@ -218,6 +220,12 @@ export default function Welcome({
                         <a href="#products" className="btn-luxury btn-luxury-dark">
                             {t('welcome', 'shop_now')}
                         </a>
+                        <button
+                            onClick={() => setQuizOpen(true)}
+                            className="btn-luxury btn-luxury-ghost"
+                        >
+                            Find my product
+                        </button>
                         <button
                             onClick={() => setCompareOpen(true)}
                             className="btn-luxury btn-luxury-ghost"
@@ -318,6 +326,12 @@ export default function Welcome({
                     open={compareOpen}
                     onClose={() => setCompareOpen(false)}
                     products={allProducts}
+                />
+
+                <BeautyQuiz
+                    open={quizOpen}
+                    onClose={() => setQuizOpen(false)}
+                    categories={categories}
                 />
 
                 <Footer />
